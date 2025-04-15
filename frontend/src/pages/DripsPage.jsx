@@ -1,9 +1,10 @@
 import React from 'react'
 import { Link, Route, Routes, useLocation } from 'react-router-dom'
 import styles from '../styles/DripsPage.module.css'
-import Poll from '../components/Poll'
 import Activity from '../components/Activity'
 import Inbox from '../components/Inbox'
+import Poll from '../components/Poll'
+import PollsRedirect from '../components/PollsRedirect'
 
 const DripsPage = () => {
     const { pathname } = useLocation()
@@ -21,7 +22,8 @@ const DripsPage = () => {
                 </Link>
             </div>
             <Routes>
-                <Route path='poll' element={<Poll/>}/>
+                <Route path='poll' element={<PollsRedirect/>}/>
+                <Route path='poll/:questionIndex' element={<Poll/>}/>
                 <Route path='activity' element={<Activity/>}/>
                 <Route path='inbox' element={<Inbox/>}/>
             </Routes>

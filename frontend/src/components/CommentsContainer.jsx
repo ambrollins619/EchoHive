@@ -46,7 +46,7 @@ const CommentsContainer = ({ post }) => {
             <div className={styles.comments}>
                 <div className={styles.selfComment}>
                     <div className={styles.selfCommentTop}>
-                        <img src={profileImage} alt="" />
+                        <img src={user?.avatar || profileImage} alt="" />
                         <TextareaAutosize
                             minRows={2}
                             maxRows={7}

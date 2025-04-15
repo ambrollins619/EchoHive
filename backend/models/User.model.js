@@ -67,6 +67,10 @@ const UserSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Post"
     }],
+    dripId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Drip",
+    },
     comments: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Comment"

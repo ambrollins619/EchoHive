@@ -89,6 +89,7 @@
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
+    cursor: pointer;
 }
 
 .searchUserBio {
@@ -111,6 +112,10 @@
     font-size: 0.9rem;
     line-height: 1.4;
     margin: 0;
+}
+
+.searchDetails p {
+    cursor: pointer;
 }
 
 .searchDetails button {

@@ -16,7 +16,7 @@ const friendSlice = createSlice({
         },
         toggleUserFriend: (state, action) => {
             const index = state.friends.findIndex(friend => friend._id === action.payload._id);
-        
+            
             if (index === -1) {
                 state.friends.push(action.payload);
             } else {

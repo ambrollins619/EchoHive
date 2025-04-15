@@ -18,22 +18,27 @@ const ProfileUpperSection = ({
 
     const loggedInUser = useSelector((state) => state.auth.user)
     const handleToggleFriend = async () => {
+        const isFriend = friends?.some(friend => friend._id === user._id);
+
         try {
-            const response = await toggleFriend(user._id)
-            if (friends.includes(loggedInUser._id)) {
-                setFollowing(following - 1)
-            } else {
-                setFollowing(following + 1)
-            }
-            dispatch(toggleUserFriend(user._id))
+            await toggleFriend(user._id);
+
+            // Update following count
+            setFollowing(prev => isFriend ? prev - 1 : prev + 1);
+
+            // Update Redux state
+            dispatch(toggleUserFriend({ _id: user._id, name: user.name }));
         } catch (error) {
-            console.log(error.message)
+            console.error(error.message);
+            // Optionally show an error toast here
         }
-    }
+    };
 
     useEffect(() => {
         setFollowing(user.friendsOf?.length)
     }, [user.friendsOf])
+
+    useEffect(() => console.log(friends), [friends])
 
     return (
         <div className={styles.upperSection}>
@@ -45,8 +50,8 @@ const ProfileUpperSection = ({
                             Edit Profile
                         </Link>
                     ) : (
-                        <button onClick={handleToggleFriend} className={`${styles.followButton} ${friends.includes(user._id) ? styles.following : ""}`}>
-                            {friends.includes(user._id) ? "Unfollow" : "Follow"}
+                        <button onClick={handleToggleFriend} className={`${styles.followButton} ${!friends?.find(friend => friend._id === user._id) ? styles.notfollowing : ""}`}>
+                            {friends?.find(friend => friend._id === user._id) ? "Unfollow" : "Follow"}
                         </button>
                     )
                 }

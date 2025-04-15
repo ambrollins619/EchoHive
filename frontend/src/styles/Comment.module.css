@@ -30,6 +30,7 @@
 .selfCommentTop img {
     width: 35px;
     height: 35px;
+    object-fit: cover;
     border-radius: 18px;
 }
 .selfCommentBottom{
@@ -69,6 +70,7 @@
 .otherCommentLeft img{
     width: 35px;
     height: 35px;
+    object-fit: cover;
     border-radius: 18px;
 }
 .commentTop{

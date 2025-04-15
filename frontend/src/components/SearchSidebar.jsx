@@ -6,11 +6,18 @@ import { FaSearch } from "react-icons/fa";
 import { searchUsers } from '../api/user';
 import Spinner from './Spinner'
 import ProfileImage from '../assets/jack.png'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const SearchSidebar = ({ onClose }) => {
   const [searchValue, setSearchValue] = useState('');
   const [showRecent, setShowRecent] = useState(true);
+  const navigate = useNavigate('')
+  const [localRecent, setLocalRecent] = useState(null)
+
+  useEffect(() => {
+    const recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || []
+    setLocalRecent(recentSearches)
+  }, [])
 
   // Debounce the search input (300ms delay)
   const debouncedSearch = useDebounceCallback(
@@ -46,6 +53,31 @@ const SearchSidebar = ({ onClose }) => {
     }
   };
 
+  const handleUserProfileRedirect = async (name, avatar, _id,collegeName) => {
+    const recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || []
+    if (!recentSearches.find(searchUser => searchUser._id === _id)) {
+      recentSearches.push({
+        _id,
+        name,
+        avatar,
+        collegeName
+      })
+    }
+    localStorage.setItem('recentSearches', JSON.stringify(recentSearches))
+
+    onClose?.(); // safely call onClose if it's provided
+    navigate(`/profile/${name}/posts`)
+  }
+
+  const removeRecentSearch = (_id) => {
+    let recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || []
+    recentSearches = recentSearches.filter(searchUser => searchUser._id !== _id)
+    // console.log(recentSearches.map(({_id}) => {return _id}) )
+    // console.log(_id)
+    setLocalRecent(recentSearches)
+    localStorage.setItem('recentSearches', JSON.stringify(recentSearches))
+  }
+
   return (
     <div className={styles.searchSidebar}>
       <div className={styles.searchHeader}>
@@ -70,18 +102,13 @@ const SearchSidebar = ({ onClose }) => {
           <>
             {searchResults?.users?.length > 0 ? (
               searchResults.users.map(user => {
-                console.log('wow', user.collegeId)
                 return (
                   <div key={user._id} className={styles.searchItem}>
                     <div className={styles.searchAvatar}>
-                      <Link to={`/profile/${user.name}/posts`} onClick={onClose}>
-                        <img src={user.avatar || ProfileImage} alt={user.name} />
-                      </Link>
+                      <img onClick={() => handleUserProfileRedirect(user.name, user.avatar, user._id, user.collegeId?.name)} src={user.avatar || ProfileImage} alt={user.name} />
                     </div>
                     <div className={styles.searchDetails}>
-                      <Link style={{textDecoration:"none"}} to={`/profile/${user.name}/posts`} onClick={onClose}>
-                        <p className={styles.searchMessage}>{user.name}</p>
-                      </Link>
+                      <p onClick={() => handleUserProfileRedirect(user.name, user.avatar, user._id, user.collegeId?.name)} className={styles.searchMessage}>{user.name}</p>
                       <div className={styles.searchUserBio}>
                         {
                           (
@@ -98,7 +125,7 @@ const SearchSidebar = ({ onClose }) => {
               }
               )
             ) : (
-              <div className={styles.noResults}>No users found {isLoading && <Spinner/>}</div>
+              <div className={styles.noResults}>No users found {isLoading && <Spinner />}</div>
             )}
           </>
         ) : (
@@ -106,6 +133,33 @@ const SearchSidebar = ({ onClose }) => {
             <div className={styles.recentHeader}>Recent</div>
             {/* Render recent searches here */}
             {/* You might want to store these in localStorage */}
+            {
+              localRecent?.map(user => {
+                return (
+                  <div key={user._id} className={styles.searchItem}>
+                    <div className={styles.searchAvatar}>
+                      <img onClick={() => handleUserProfileRedirect(user.name, user.avatar, user._id, (user.collegeId?.name||user.collegeName))} src={user.avatar || ProfileImage} alt={user.name} />
+                    </div>
+                    <div className={styles.searchDetails}>
+                      <p onClick={() => handleUserProfileRedirect(user.name, user.avatar, user._id, (user.collegeId?.name||user.collegeName))} className={styles.searchMessage}>{user.name}</p>
+                      <div className={styles.searchUserBio}>
+                        {
+                          (
+                            <span className={styles.bioText}>{user.bio ||
+                              `User from ${(user.collegeId?.name || user.collegeName).length > 12 ?
+                                (user.collegeId?.name || user.collegeName).slice(0, 10) + '...' :
+                                (user.collegeId?.name || user.collegeName)}`}</span>
+                          )
+                        }
+                      </div>
+                    </div>
+                    <div className={styles.removeSearchedUser} onClick={()=>removeRecentSearch(user._id)}>
+                      x
+                    </div>
+                  </div>
+                )
+              })
+            }
           </>
         )}
       </div>

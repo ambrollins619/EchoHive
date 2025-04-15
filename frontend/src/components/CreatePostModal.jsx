@@ -51,7 +51,7 @@ const CreatePostModal = ({ togglePostModalOpen }) => {
             const response = await createPost(formData)
             console.log("Post created finally");
             toast.success("Post created successfully")
-            // togglePostModalOpen();
+            togglePostModalOpen();
         } catch (error) {
             toast.error(error.message)
             console.log(error.message);

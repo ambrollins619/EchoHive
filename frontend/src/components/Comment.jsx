@@ -88,7 +88,7 @@ const Comment = ({
                 isEditing ?
                     <div className={styles.selfComment}>
                         <div className={styles.selfCommentTop}>
-                            <img src={comment?.userId?.avatar || profileImage} alt="" />
+                            <img src={user.avatar || profileImage} alt="" />
                             <TextareaAutosize
                                 minRows={2}
                                 maxRows={7}

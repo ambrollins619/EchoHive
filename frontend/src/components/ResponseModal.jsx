@@ -3,8 +3,10 @@ import { ModalContext } from '../context/modalContext';
 import styles from '../styles/ResponseModal.module.css'
 import { createPortal } from 'react-dom'
 import profileImage from '../assets/megan.png'
+import { Link } from 'react-router-dom'
 
-const ResponseModal = () => {
+const ResponseModal = ({ item }) => {
+    console.log(item)
     const { setShowModal } = useContext(ModalContext)
     return createPortal(
         <div className={styles.modal}>
@@ -14,29 +16,30 @@ const ResponseModal = () => {
             <div className={styles.question}>
                 <div className={styles.questionInfo}>
                     <div className={styles.emoji}>
-                        🔥
+                        {[...item.questionId.text][0] || '❓'}
                     </div>
                     <div className={styles.statement}>
-                        They have so much free time
+                        {item.questionId.text.slice([...item.questionId.text][0].length + 1).trim()}
                     </div>
                 </div>
                 <div className={styles.options}>
-                    <div className={styles.option}>
-                        <img src={profileImage} alt="profile" className={styles.optionProfileImage} />
-                        Pushpa
-                    </div>
-                    <div className={`${styles.option} ${styles.freezedOption}`}>
-                        <img src={profileImage} alt="profile" className={styles.optionProfileImage} />
-                        Krishna
-                    </div>
-                    <div className={styles.option}>
-                        <img src={profileImage} alt="profile" className={styles.optionProfileImage} />
-                        Aditya
-                    </div>
-                    <div className={`${styles.option} ${styles.freezedOption} ${styles.selectedOption}`}>
-                        <img src={profileImage} alt="profile" className={styles.optionProfileImage} />
-                        Nikhil
-                    </div>
+                    {
+                        item.questionId?.options.map(({ userId: user }) => {
+
+                            return (
+                                <Link to={`/profile/${user.name}/posts`} className={`${styles.option} 
+                                ${ item.selectedOption._id === user._id ?
+                                        styles.selectedOption : styles.freezedOption}`}
+                                    key={user._id}
+                                    style={{textDecoration:"none"}}
+                                    onClick={()=> setShowModal(false)}
+                                >
+                                    <img src={user.avatar || profileImage} alt="profile" className={styles.optionProfileImage} />
+                                    {user.name}
+                                </Link>
+                            )
+                        })
+                    }
                 </div>
             </div>
         </div>,
