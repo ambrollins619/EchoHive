@@ -4,7 +4,7 @@ import { Question } from "../models/Question.model.js";
 import { QuestionResponse } from "../models/QuestionResponse.model.js";
 import { User } from "../models/User.model.js";
 import { QUESTIONS_POOL } from "../utils/questions.js";
-import { userSocketMap } from "../socket/socket.js";
+import { io, userSocketMap } from "../socket/socket.js";
 import { Notification } from "../models/Notification.model.js";
 
 export const createDrip = async (userId) => {
@@ -132,8 +132,7 @@ export const updateDrip = async (req, res) => {
         if (question.questionResponse) {
             return res.status(400).json({ success: false, message: "Question has already been responded to" })
         }
-        console.log("question Options", question.options)
-        console.log("selectedOptions", selectedUserId)
+        
         if (!question.options.some(({ userId }) => userId.equals(selectedUserId))) {
             return res.status(400).json({ success: false, message: "Selected user not found within question options" })
         }
@@ -168,13 +167,9 @@ export const updateDrip = async (req, res) => {
         question.questionResponse = questionResponse._id;
         await question.save();
         await drip.populate("questions")
-        console.log("drip Questions", drip.questions)
-        console.log("questionid", question._id)
-        console.log('index', drip.questions.findIndex(dripQuestion => dripQuestion._id.equals(question._id)))
-        console.log('hi')
-        console.log('length', drip.questions.length)
+        
         if (drip.questions.findIndex(dripQuestion => dripQuestion._id.equals(question._id)) === drip.questions.length - 1) {
-            console.log('yo')
+
             // drip.isCompleted = true
             drip.activityDate = Date.now() + 1000 * 60 * 60
 
@@ -247,7 +242,6 @@ export const skipLast = async (req, res) => {
     try {
         const { dripId } = req.params
         const userId = req.user._id;
-        console.log("hi")
 
         if (!mongoose.Types.ObjectId.isValid(dripId)) {
             return res.status(400).json({ success: false, message: "Drip not found" })
@@ -339,7 +333,6 @@ export const skipLast = async (req, res) => {
 
 export const getDrip = async (req, res) => {
     try {
-        console.log('hi')
         // for each user we will have a unique drip
         let drip;
         if (!req.user.dripId) {
@@ -364,7 +357,7 @@ export const getDrip = async (req, res) => {
                 ]
             })
         }
-        console.log(drip)
+        
         return res.status(200).json(drip); //return the drip for the user
     } catch (error) {
         console.log(error.message)
@@ -408,13 +401,11 @@ export const getProblem = async (req, res) => {
             });
         }
 
-        console.log("hi1")
         // Authorization check (compare drip's userId with requesting user)
         if (!req.user.dripId.equals(dripId)) {
             return res.status(403).json({ success: false, message: "Unauthorized action" })
         }
 
-        console.log("hi2")
         // Validate question index range
         if (index >= drip.questions.length) {
             return res.status(404).json({
@@ -423,13 +414,8 @@ export const getProblem = async (req, res) => {
                 totalQuestions: drip.questions.length
             });
         }
-        console.log("hi3")
+        
         // Check drip availability
-        console.log(drip.activityDate)
-        console.log("new date", new Date())
-        console.log("activity date", new Date(drip.activityDate))
-        console.log(new Date() > new Date(drip.activityDate));
-        console.log(index)
         if (drip.activityDate && (new Date() < new Date(drip.activityDate)) && index === -1) {
             return res.status(200).json({
                 success: true,
@@ -444,7 +430,7 @@ export const getProblem = async (req, res) => {
                 message: "Man Poll is active",
             });
         }
-        console.log("yo")
+        
         // Get full question with populated options
         const question = await Question.findById(drip.questions[index]._id)
             .populate([
@@ -572,7 +558,6 @@ export const shuffleOptions = async (req, res) => {
                     select: 'selectedOption',
                 }
             ]).lean()
-        console.log(question)
 
         return res.status(200).json(populatedQuestion);
     } catch (error) {

@@ -12,8 +12,7 @@ export const createPost = async (req, res) => {
         const { isAnonymous, content, postType, isGlobal, poll } = req.body;
         let media = null;
         let pollDoc = null;
-        console.log(poll);
-
+        
         // Handle media upload
         if (req.file) {
             media = await uploadFileToCloudinary(req.file.buffer);
@@ -185,21 +184,17 @@ export const editPost = async (req, res) => {
             await Poll.findByIdAndDelete(post.pollId)
             post.pollId = null;
         }
-        // console.log("removeImage",removeImage)
-        // console.log("removeImage",req.file)
+        
         let updatedMedia = {}
         if (req.file) {
-            // console.log("hi")
             const uploadResult = await uploadFileToCloudinary(req.file.buffer);
             updatedMedia = {
                 url: uploadResult.url,
                 mediaType: uploadResult.mediaType
             }
         } else if(removeImage === 'true' || removeImage === true) {
-            // console.log("hello")
             updatedMedia = null;
         } else {
-            // console.log("tata")
             updatedMedia = {
                 url: post.media.url,
                 mediaType: post.media.mediaType

@@ -35,3 +35,19 @@ export const readNotification = async (req, res) => {
         })
     }
 }
+
+export const getNotifications = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const user = await User.findById(userId).populate('notifications');
+        const populatedNotifications = await Notification.populateReferences(user.notifications)
+        
+        return res.status(200).json(populatedNotifications)
+    } catch (error) {
+        console.error(error.message)
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        })
+    }
+}

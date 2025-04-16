@@ -22,7 +22,7 @@ const Activity = () => {
                 <p>Some Error occurred</p> :
                 activities?.reverse().map((activity) => {
                     return (
-                        <div className={styles.activity}>
+                        <div key={activity._id} className={styles.activity}>
                             <img src={activity.selectedOption.avatar || profileImage} alt="profile image" />
                             <div className={styles.activityRight}>
                                 <div className={styles.activityTop}>

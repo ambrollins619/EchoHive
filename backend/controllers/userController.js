@@ -174,16 +174,13 @@ export const toggleFriend = async (req, res) => {
 
         const updateQuery = {};
         const updateQueryFriend = {};
-        console.log(friendId)
+        
         if (user.friends.some(friendId => newFriend._id.equals(friendId))) {
-            console.log('hi');
-
             updateQueryFriend.$pull = {}
             updateQueryFriend.$pull = { friendsOf: user._id }
             updateQuery.$pull = {}
             updateQuery.$pull = { friends: newFriend._id }
         } else {
-            console.log("yo")
             updateQueryFriend.$push = {}
             updateQueryFriend.$push = { friendsOf: user._id }
             updateQuery.$push = {}
@@ -223,7 +220,7 @@ export const changePassword = async (req, res) => {
         const { currentPassword, newPassword } = req.body;
         
         const user = await User.findById(req.user._id);
-        console.log("yo")
+        
         const isMatch = await user.matchPassword(currentPassword);
         if (!isMatch) {
             return res.status(403).json({ success: false, message: "Current password is incorrect" });

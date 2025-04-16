@@ -19,7 +19,6 @@ const Inbox = () => {
         queryFn: getInbox
     })
     const user = useSelector((state)=>state.auth.user)
-    useEffect(()=>console.log(inbox),[inbox])
 
     return (
         <>

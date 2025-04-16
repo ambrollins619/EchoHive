@@ -38,7 +38,7 @@ const ProfileUpperSection = ({
         setFollowing(user.friendsOf?.length)
     }, [user.friendsOf])
 
-    useEffect(() => console.log(friends), [friends])
+    // useEffect(() => console.log(friends), [friends])
 
     return (
         <div className={styles.upperSection}>

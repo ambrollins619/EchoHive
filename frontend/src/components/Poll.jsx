@@ -235,7 +235,7 @@ const Poll = () => {
                             question?.options.map(({ userId: user }) => {
 
                                 return (
-                                    <div className={`${styles.option} ${question?.questionResponse ?
+                                    <div key={user._id} className={`${styles.option} ${question?.questionResponse ?
                                         question?.questionResponse?.selectedOption === user._id ?
                                             styles.selectedOption :
                                             styles.freezedOption : ""}`}

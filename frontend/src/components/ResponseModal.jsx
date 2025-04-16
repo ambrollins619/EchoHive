@@ -6,7 +6,7 @@ import profileImage from '../assets/megan.png'
 import { Link } from 'react-router-dom'
 
 const ResponseModal = ({ item }) => {
-    console.log(item)
+    
     const { setShowModal } = useContext(ModalContext)
     return createPortal(
         <div className={styles.modal}>

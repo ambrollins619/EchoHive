@@ -9,13 +9,12 @@ const PollsRedirect = () => {
     queryKey: ['drip'],
     queryFn: getDrip,
   })
-  console.log('drip',drip)
+  
   // Find the index of the first unanswered question
   const firstUnansweredIndex = new Date(drip?.activityDate) > Date.now() ? -1 : drip?.questions?.findIndex(
     question => question.questionResponse === null
   )  ?? -1
 
-  useEffect(() => console.log(drip), [drip])
   if (isLoading) {
     return (<p>Loading...</p>)
   }

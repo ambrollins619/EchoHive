@@ -3,7 +3,7 @@ import axiosInstance from "./axiosInstance"
 export const updateDrip = async (dripId, questionIndex, selectedUserId) => {
     try {
         const response = await axiosInstance.post(`/drips/update/${dripId}/${questionIndex}/${selectedUserId}`)
-        console.log(response.data)
+        // console.log(response.data)
         return response.data
     } catch (error) {
         console.error('Failed to vote post:', error);
@@ -20,7 +20,7 @@ export const updateDrip = async (dripId, questionIndex, selectedUserId) => {
 export const getDrip = async () => {
     try {
         const response = await axiosInstance.get(`/drips`)
-        console.log(response.data)
+        // console.log(response.data)
         return response.data
     } catch (error) {
         console.error('Failed to vote post:', error);
@@ -37,7 +37,7 @@ export const getDrip = async () => {
 export const getQuestion = async (dripId, questionIndex) => {
     try {
         const response = await axiosInstance.get(`/drips/problem/${dripId}/${questionIndex}`)
-        console.log(response.data.question || response.data)
+        // console.log(response.data.question || response.data)
         return response.data.question || response.data
     } catch (error) {
         console.error('Failed to vote post:', error);
@@ -73,7 +73,7 @@ export const shuffleOptions = async (dripId, questionIndex, newOptions) => {
 export const getActivity = async () => {
     try {
         const response = await axiosInstance.get(`/drips/activity`)
-        console.log(response.data)
+        // console.log(response.data)
         return response.data
     } catch (error) {
         console.error('Failed to fetch activity:', error);
@@ -90,7 +90,7 @@ export const getActivity = async () => {
 export const getInbox = async () => {
     try {
         const response = await axiosInstance.get(`/drips/inbox`)
-        console.log(response.data)
+        // console.log(response.data)
         return response.data
     } catch (error) {
         console.error('Failed to fetch inbox:', error);
@@ -107,7 +107,7 @@ export const getInbox = async () => {
 export const getQuestionResponse = async (questionResponseId) => {
     try {
         const response = await axiosInstance.get(`/drips/question-response/${questionResponseId}`)
-        console.log(response.data)
+        // console.log(response.data)
         return response.data
     } catch (error) {
         console.error('Failed to vote post:', error);
@@ -123,9 +123,8 @@ export const getQuestionResponse = async (questionResponseId) => {
 
 export const skipLast = async (dripId) => {
     try {
-        console.log('hi')
         const response = await axiosInstance.post(`/drips/skip-last/${dripId}`)
-        console.log(response.data)
+        // console.log(response.data)
         return response.data
     } catch (error) {
         console.error('Failed to skip Last:', error);

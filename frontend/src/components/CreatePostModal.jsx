@@ -49,7 +49,7 @@ const CreatePostModal = ({ togglePostModalOpen }) => {
                 formData.append("image", file)
             }
             const response = await createPost(formData)
-            console.log("Post created finally");
+            // console.log("Post created finally");
             toast.success("Post created successfully")
             togglePostModalOpen();
         } catch (error) {

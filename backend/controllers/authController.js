@@ -41,8 +41,8 @@ export const register = async (req, res) => {
                     name: userExists.name,
                     email: userExists.email,
                     avatar: userExists.avatar,
-                    collegeId: user.collegeId._id,
-                    collegeName: user.collegeId.name,
+                    collegeId: userExists.collegeId._id,
+                    collegeName: userExists.collegeId.name,
                     isVerified: userExists.isVerified,
                     bio: userExists.bio
                 },

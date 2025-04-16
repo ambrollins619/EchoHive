@@ -2,20 +2,20 @@ import axiosInstance from "./axiosInstance"
 
 export const getUserByName = async (username) => {
     try {
-        const response = await axiosInstance.get('/users',{
+        const response = await axiosInstance.get('/users', {
             params: { username }
         })
-        console.log(response.data.userByName)
+        // console.log(response.data.userByName)
         return response.data.userByName
     } catch (error) {
         console.error('Failed to fecth user:', error);
-        
+
         // Convert generic Axios errors to more specific messages
-        const errorMessage = error.response?.data?.message 
-            || error.message 
+        const errorMessage = error.response?.data?.message
+            || error.message
             || 'Failed to fetch user';
-        
-        throw new Error(errorMessage); 
+
+        throw new Error(errorMessage);
     }
 }
 
@@ -26,13 +26,13 @@ export const toggleFriend = async (friendId) => {
         return response.data
     } catch (error) {
         console.error('Failed to fetch user:', error);
-        
+
         // Convert generic Axios errors to more specific messages
-        const errorMessage = error.response?.data?.message 
-            || error.message 
+        const errorMessage = error.response?.data?.message
+            || error.message
             || 'Failed to fetch user';
-        
-        throw new Error(errorMessage); 
+
+        throw new Error(errorMessage);
     }
 }
 
@@ -43,42 +43,42 @@ export const getFriends = async () => {
         return response.data
     } catch (error) {
         console.error('Failed to fecth user:', error);
-        
+
         // Convert generic Axios errors to more specific messages
-        const errorMessage = error.response?.data?.message 
-            || error.message 
+        const errorMessage = error.response?.data?.message
+            || error.message
             || 'Failed to fetch user';
-        
-        throw new Error(errorMessage); 
+
+        throw new Error(errorMessage);
     }
 }
 
 
-export const updateProfile = async (formData,userId) => {
+export const updateProfile = async (formData, userId) => {
     try {
-        
+
         const response = await axiosInstance.patch(`/users/${userId}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
         });
-        console.log(response.data)
-        
+        // console.log(response.data)
+
         return response.data;
     } catch (error) {
         throw new Error(error.response?.data?.message || 'Failed to update post');
     }
-}; 
+};
 
 export const updatePassword = async (currentPassword, newPassword) => {
     try {
-        
+
         const response = await axiosInstance.patch(`/users/update-password`, {
             currentPassword,
             newPassword
         });
-        console.log(response.data)
-        
+        // console.log(response.data)
+
         return response.data;
     } catch (error) {
         throw new Error(error.response?.data?.message || 'Failed to update password');
@@ -87,13 +87,13 @@ export const updatePassword = async (currentPassword, newPassword) => {
 
 export const searchUsers = async (searchQuery) => {
     try {
-        
+
         const response = await axiosInstance.get(`/users/search`, {
             params: {
                 query: searchQuery
             }
         });
-        
+
         // console.log(response.data)
         return response.data;
 
@@ -101,3 +101,16 @@ export const searchUsers = async (searchQuery) => {
         throw new Error(error.response?.data?.message || 'Failed to update password');
     }
 };
+
+export const getNotifications = async () => {
+    try {
+
+        const response = await axiosInstance.get('/notifications')
+
+        console.log(response.data)
+        return response.data;
+
+    } catch (error) {
+        throw new Error(error.response?.data?.message || 'Failed to get notifications');
+    }
+}

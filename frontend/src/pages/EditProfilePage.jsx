@@ -18,7 +18,7 @@ const EditProfilePage = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    console.log(user)
+    // console.log(user)
     setBio(user.bio)
     setPreview(user.avatar)
   }, [user])
@@ -88,6 +88,7 @@ const EditProfilePage = () => {
             type="text"
             id='college'
             value={user.collegeName}
+            readOnly={true}
           />
         </div>
         <div className={styles.textField}>

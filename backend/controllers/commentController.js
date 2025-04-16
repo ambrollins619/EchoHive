@@ -22,7 +22,6 @@ export const createComment = async (req, res) => {
         }
 
         const user = await User.findByIdAndUpdate(userId);
-        console.log(user)
         const comment = await Comment.create({
             postId: new mongoose.Types.ObjectId(postId),
             userId,

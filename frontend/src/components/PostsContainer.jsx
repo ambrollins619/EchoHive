@@ -78,7 +78,7 @@ const PostsContainer = ({handleEditPost}) => {
 
   useEffect(() => {
     if (inView && hasNextPage) {
-      console.log('Fire!')
+      // console.log('Fire!')
       fetchNextPage()
     }
   }, [inView, hasNextPage, fetchNextPage])

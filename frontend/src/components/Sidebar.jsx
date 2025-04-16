@@ -23,7 +23,8 @@ const Sidebar = ({ toggleNotifications, toggleSearchbar, showSearchbar, setPostM
     const { setShowModal } = useContext(ModalContext);
     const dispatch = useDispatch();
     const navigate = useNavigate()
-    const {name} = useSelector((state)=>state.auth.user)
+    const { name } = useSelector((state) => state.auth.user)
+    const readBool = useSelector((state) => state.notification.readBool)
 
     const handleLogout = async () => {
         try {
@@ -61,6 +62,10 @@ const Sidebar = ({ toggleNotifications, toggleSearchbar, showSearchbar, setPostM
                 <div to="/" className={styles.navItem} onClick={toggleNotifications}>
                     <FaHeart className={styles.icon} />
                     <span>Notifications</span>
+                    {
+                        readBool &&
+                        <p style={{ marginLeft: "3px", height: "8px", width: "8px", borderRadius: "4px", background: "white" }}></p>
+                    }
                 </div>
                 <div className={`${styles.navItem} ${styles.createPost}`} onClick={togglePostModalOpen}>
                     <svg viewBox="0 0 24 24" width="24" height="24">

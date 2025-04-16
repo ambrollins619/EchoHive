@@ -98,7 +98,7 @@ export const createPost = async (formData) => {
                 'Content-Type': 'multipart/form-data'
             }
         })
-        console.log(response.data);
+        // console.log(response.data);
 
         return response.data
     } catch (error) {
@@ -116,7 +116,7 @@ export const createPost = async (formData) => {
 export const deletePost = async (postId) => {
     try {
         const response = await axiosInstance.delete(`/posts/${postId}`)
-        console.log(response.data);
+        // console.log(response.data);
 
         return response.data
     } catch (error) {
@@ -139,7 +139,7 @@ export const updatePost = async (formData,postId) => {
                 'Content-Type': 'multipart/form-data',
             },
         });
-        console.log(response.data)
+        // console.log(response.data)
         
         return response.data;
     } catch (error) {

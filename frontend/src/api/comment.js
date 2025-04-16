@@ -5,7 +5,7 @@ export const voteComment = async (isUpvote,postId,commentId) => {
         const response = await axiosInstance.post(`/posts/${postId}/comments/${commentId}/vote`, {
             isUpvote
         })
-        console.log(response.data)
+        // console.log(response.data)
         return response.data
     } catch (error) {
         console.error('Failed to vote post:', error);
@@ -26,7 +26,7 @@ export const createComment = async (postId, content) => {
             content
         })
 
-        console.log(response.data)
+        // console.log(response.data)
         
         return response.data
     } catch (error) {
@@ -68,7 +68,7 @@ export const deleteComment = async (postId, commentId) => {
         // creating a comment yo
         const response = await axiosInstance.delete(`/posts/${postId}/comments/${commentId}`)
         
-        console.log(response.data)
+        // console.log(response.data)
         
         return response.data
     } catch (error) {

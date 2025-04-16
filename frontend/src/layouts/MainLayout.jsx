@@ -10,9 +10,11 @@ import CreatePostModal from '../components/CreatePostModal';
 import { useDispatch, useSelector } from 'react-redux'
 import { Navigate } from 'react-router-dom';
 import EditPostModal from '../components/EditPostModal';
-import { getFriends } from '../api/user';
+import { getFriends, getNotifications } from '../api/user';
 import { setFriends } from '../features/user/friendSlice';
 import { setCredentials } from '../features/auth/authSlice';
+import { initSocket } from '../socket/initSocket.js'
+import { setNotifications, setRead } from '../features/notifications/notificationSlice.js'
 
 const MainLayout = () => {
   const [showNotifications, setShowNotifications] = useState(false);
@@ -31,6 +33,7 @@ const MainLayout = () => {
     setShowSearchbar(false);
     setPostModalOpen(false);
     setEditModalOpen(false);
+    dispatch(setRead())
     document.body.classList.toggle(styles.sidebarOpen, !showNotifications);
   };
 
@@ -77,6 +80,19 @@ const MainLayout = () => {
     }
   }, [])
 
+  useEffect(() => {
+    try {
+      const fetchNotifications = async () => {
+        const response = await getNotifications()
+        dispatch(setNotifications(response))
+      }
+      fetchNotifications()
+
+    } catch (error) {
+      console.log(error.message)
+    }
+  }, [])
+
   // Close on ESC key
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -105,7 +121,14 @@ const MainLayout = () => {
       // redux already has token
       setCheckingAuth(false);
     }
-  }, [ dispatch]);
+  }, [ dispatch ]);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if(user._id){
+      initSocket(dispatch, user._id)
+    }
+  }, [])
 
   if (checkingAuth) return <p> Loading </p>; // or a loading spinner
 
