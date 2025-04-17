@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken"
 import { College } from "../models/College.model.js"; // Your MongoDB model for colleges
 import { Notification } from "../models/Notification.model.js";
 import { io, userSocketMap } from "../socket/socket.js";
+import WORLD_UNIVERSITIES from '../world_universities_and_domains.json' with { type: 'json' };
 
 const extractDomain = (email) => {
     return email.split("@")[1];
@@ -34,8 +35,8 @@ export const register = async (req, res) => {
             await userExists.save();
 
             SendVerificationCode(userExists.email, userExists.verificationCode);
-            return res.status(200).json({ 
-                success: true, 
+            return res.status(200).json({
+                success: true,
                 message: "New verification code sent",
                 user: {
                     name: userExists.name,
@@ -51,10 +52,29 @@ export const register = async (req, res) => {
         }
 
         const domain = extractDomain(email);
-        const college = await College.findOne({ domains: { $in: [domain] } });
+        const collegeJson = WORLD_UNIVERSITIES.find(university => university.domains.some(
+            universityDomain => universityDomain === domain || domain.endsWith(`.${universityDomain}`)
+        ))
 
-        if (!college) {
+
+        if (!collegeJson) {
             return res.status(401).json({ success: false, message: "Your college domain was not found" });
+        }
+
+        let college = await College.findOne({ name: collegeJson.name });
+
+        if(!college) {
+            college = await College.create({
+                name: collegeJson.name,
+                domains: [domain],
+            })
+        } else {
+            college = await College.findByIdAndUpdate(college._id, {
+                $addToSet: {
+                    domains: domain
+                }
+            }, { new: true })
+            await college.save()
         }
 
         const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
@@ -70,7 +90,7 @@ export const register = async (req, res) => {
 
         college.users.push(user._id);
         await college.save();
-        await user.populate({path: 'collegeId', model: 'College', select: 'name'})
+        await user.populate({ path: 'collegeId', model: 'College', select: 'name' })
 
         if (user) {
             const token = generateToken(res, user._id)
@@ -142,7 +162,7 @@ export const verifyCode = async (req, res) => {
                         })
                         collegeUser.notifications.push(notification._id);
                         await collegeUser.save();
-                        
+
                         const collegeUserId = collegeUser._id.toString();
                         if (collegeUserId in userSocketMap) {
                             io.to(userSocketMap[collegeUserId]).emit('newNotification', notification);
@@ -207,8 +227,8 @@ export const login = async (req, res) => {
         }
 
         const user = await User
-        .findOne({ email })
-        .select('-verificationCode -verificationCodeExpiry');
+            .findOne({ email })
+            .select('-verificationCode -verificationCodeExpiry');
         if (!user) {
             return res.status(400).json({ success: false, message: "No such user registered" });
         }
@@ -217,13 +237,13 @@ export const login = async (req, res) => {
             return res.status(400).json({ success: false, message: "User not verified" });
         }
 
-        await user.populate({path: 'collegeId', model: 'College', select: 'name'})
+        await user.populate({ path: 'collegeId', model: 'College', select: 'name' })
 
         if (await user.matchPassword(password)) {
             const token = generateToken(res, user._id.toString());
-            return res.status(201).json({ 
+            return res.status(201).json({
                 success: true,
-                message: "User logged in successfully", 
+                message: "User logged in successfully",
                 user: {
                     name: user.name,
                     email: user.email,
@@ -247,7 +267,7 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
     try {
-        
+
         res.cookie('jwt', '', {
             httpOnly: true,
             expires: new Date(0)

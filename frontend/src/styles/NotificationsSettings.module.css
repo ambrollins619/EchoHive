@@ -3,6 +3,7 @@
     flex-direction: column;
     gap: 30px;
     padding: 50px 50px;
+    /* background-color: red; */
 }
 
 .editNotifications {
@@ -12,7 +13,7 @@
 }
 
 .toggleSwitch {
-    width: 50px;
+    min-width: 50px;
     padding: 5px;
     border-radius: 20px;
     cursor: pointer;
@@ -68,4 +69,25 @@
     font-size: 14px;
     color: rgb(172, 171, 171);
     opacity: 80%;
+}
+@media (max-width: 1085px) {
+    .editNotifications{
+        width: 100%;
+    }
+}
+@media (max-width: 1085px) {
+    .editNotificationsSectionContainer{
+        padding-left: 0px;
+    }
+}
+@media (max-width: 768px) {
+    .editNotificationsSectionContainer{
+        margin-left: 60px;
+    }
+}
+
+@media (max-width: 625px) {
+    .longerDescription{
+        display: none;
+    }
 }

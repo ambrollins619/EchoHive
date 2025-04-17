@@ -3,6 +3,7 @@
     flex-direction: column;
     gap: 30px;
     padding: 50px 50px;
+    /* background-color: red; */
 }
 
 .editProfileForm {
@@ -100,4 +101,16 @@
 .noChange{
     pointer-events: none;
     background: linear-gradient(135deg, #0d4468, #0c1d5d);
+}
+
+@media (max-width: 1080px) {
+    .avatarField,.textField textarea{
+        width: 90%;
+    }   
+}
+
+@media (max-width: 900px) {
+    .avatarField, .textField textarea{
+        width: 100%;
+    }   
 }

@@ -64,5 +64,14 @@
 @media (max-width: 1264px) {
     .settingsBar {
         left: 96px;
+        width: 250px;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .settingsBar{
+        left:0;
+        width: 200px;
     }
 }

@@ -11,14 +11,6 @@
     transition: filter 0.3s ease, margin-right 0.3s ease;
 }
 
-.rightBar {
-    position: fixed;
-    right: 0;
-    width: 400px;
-    height: 100vh;
-    transition: filter 0.3s ease, margin-right 0.3s ease;
-}
-
 .mainContent.blurred, .rightBar.blurred {
     filter: blur(2px);
     pointer-events: none;
@@ -50,7 +42,8 @@
 
 @media (max-width: 1264px) {
     .mainContent {
-        margin-left: 120px;
+        margin-left: 370px;
+        margin-right: 50px;
     }
     .rightBar {
         display: none;
@@ -58,12 +51,14 @@
 }
 
 @media (max-width: 1024px) {
-    
+    .mainContent{
+
+    }
 }
 
 @media (max-width: 768px) {
     .mainContent {
-        margin-left: 20px;
+        margin-left: 180px;
         margin-right: 20px;
     }
 }

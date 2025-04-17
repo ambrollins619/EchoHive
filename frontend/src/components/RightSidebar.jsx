@@ -50,7 +50,7 @@ const RightSidebar = ({ recommended }) => {
                                     displayedUsers?.map((user, index) => {
                                         return (
                                             <div key={index} className={styles.recommendedUser}>
-                                                <Link to={`/profile/${user.name}`} className={styles.linkStyles}>
+                                                <Link to={`/profile/${user.name}/posts`} className={styles.linkStyles}>
                                                     <div className={styles.recommendedUserLeft}>
                                                         <div className={styles.profile}>
                                                             <img src={user.avatar || profileImage} alt="profile" className={styles.profileImage} />

@@ -13,7 +13,7 @@ const NotificationSidebar = ({ onClose }) => {
   const friends = useSelector((state) => state.friend.friends)
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  useEffect(()=>console.log(notifications),notifications)
+  // useEffect(()=>console.log(notifications),notifications)
   
   const handleToggleFriend = async (notification) => {
     try {
@@ -68,7 +68,7 @@ const NotificationSidebar = ({ onClose }) => {
         {
           [...notifications]?.reverse().map(notification => {
             return notification.notificationType === "NEW_USER_JOINED" ? (
-              <div className={styles.notificationItem}>
+              <div className={styles.notificationItem} key={notification._id}>
                 <div onClick={()=>handleDirectUserNotification(notification)} className={styles.notificationAvatar}>
                   <img src={notification.referenceId.avatar || profileImage} alt="User" />
                 </div>
@@ -89,7 +89,7 @@ const NotificationSidebar = ({ onClose }) => {
                 </div>
               </div>
             ) : (
-              <div className={styles.notificationItem}>
+              <div className={styles.notificationItem} key={notification._id}>
                 <div className={styles.notificationAvatar}>
                   <img src={profileImage} alt="User" />
                 </div>

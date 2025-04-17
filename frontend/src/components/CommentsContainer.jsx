@@ -56,7 +56,7 @@ const CommentsContainer = ({ post }) => {
                         />
                     </div>
                     <div className={styles.selfCommentBottom}>
-                        <button disabled={!newComment.length} onClick={handleCreateComment}>Reply</button>
+                        <button disabled={!newComment.length} onClick={handleCreateComment}>Comment</button>
                     </div>
                 </div>
                 {
