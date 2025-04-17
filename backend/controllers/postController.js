@@ -12,7 +12,7 @@ export const createPost = async (req, res) => {
         const { isAnonymous, content, postType, isGlobal, poll } = req.body;
         let media = null;
         let pollDoc = null;
-        
+
         // Handle media upload
         if (req.file) {
             media = await uploadFileToCloudinary(req.file.buffer);
@@ -169,7 +169,7 @@ export const editPost = async (req, res) => {
                 voters: []
             });
         }
-        
+
         // Handle poll creation
         if (poll && poll.length > 0 && !post.pollId) {
             pollDoc = await Poll.create({
@@ -178,13 +178,13 @@ export const editPost = async (req, res) => {
             });
             post.pollId = pollDoc._id;
         }
-        
+
         // Handle poll deletion
-        if( (!poll || poll?.length === 0) && post.pollId) {
+        if ((!poll || poll?.length === 0) && post.pollId) {
             await Poll.findByIdAndDelete(post.pollId)
             post.pollId = null;
         }
-        
+
         let updatedMedia = {}
         if (req.file) {
             const uploadResult = await uploadFileToCloudinary(req.file.buffer);
@@ -192,7 +192,7 @@ export const editPost = async (req, res) => {
                 url: uploadResult.url,
                 mediaType: uploadResult.mediaType
             }
-        } else if(removeImage === 'true' || removeImage === true) {
+        } else if (removeImage === 'true' || removeImage === true) {
             updatedMedia = null;
         } else {
             updatedMedia = {
@@ -303,7 +303,7 @@ export const votePost = async (req, res) => {
 
 export const getPosts = async (req, res) => {
     try {
-        let { isGlobal, collegeId, page } = req.query;
+        let { isGlobal, collegeId, page, postType } = req.query;
         let itemsPerPage = 10;
 
         if (collegeId && !mongoose.Types.ObjectId.isValid(collegeId)) {
@@ -333,8 +333,12 @@ export const getPosts = async (req, res) => {
         ]);
 
         if (isGlobal) {
+            const filters = { isGlobal: true };
+            if (!(postType === 'All')) {
+                filters.postType = postType
+            }
             const posts = await Post
-                .find({ isGlobal: true })
+                .find(filters)
                 .sort({ createdAt: -1 })
                 .skip(itemsPerPage * (page - 1))
                 .limit(itemsPerPage)
@@ -359,11 +363,13 @@ export const getPosts = async (req, res) => {
             return res.status(403).json({ message: "Access Denied" }); // Changed 401 to 403 (Forbidden)
         }
 
-
-
+        const filters = { collegeId: new mongoose.Types.ObjectId(collegeId) };
+        if (!(postType === 'All')) {
+            filters.postType = postType
+        }
 
         const posts = await Post
-            .find({ collegeId: new mongoose.Types.ObjectId(collegeId) })
+            .find(filters)
             .sort({ createdAt: -1 })
             .skip(itemsPerPage * (page - 1))
             .limit(itemsPerPage)
@@ -388,7 +394,7 @@ export const getPosts = async (req, res) => {
 // Will be testing this route while doing implementation of frontend
 export const getTrendingPosts = async (req, res) => {
     try {
-        let { isGlobal, collegeId, page } = req.query;
+        let { isGlobal, collegeId, page, postType } = req.query;
         let itemsPerPage = 10;
         if (collegeId && !mongoose.Types.ObjectId.isValid(collegeId)) {
             return res.status(400).json({ error: "Invalid collegeId format" });
@@ -410,6 +416,10 @@ export const getTrendingPosts = async (req, res) => {
 
         if (isGlobal) {
             fetchQuery.isGlobal = true;
+        }
+
+        if (!(postType === 'All')) {
+            fetchQuery.postType = postType
         }
 
         if (Object.keys(fetchQuery).length === 0) {

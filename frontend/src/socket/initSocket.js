@@ -5,9 +5,9 @@ import { connectSocket } from "./socket";
 export const initSocket = (dispatch, userId) => {
     const socket = connectSocket(userId);
 
-    socket.on("connect", () => {
-        console.log("Connected with ID:", socket.id);
-    });
+    // socket.on("connect", () => {
+    //     console.log("Connected with ID:", socket.id);
+    // });
 
     socket.on("newNotification", (notification) => {
         dispatch(receiveNotification(notification));

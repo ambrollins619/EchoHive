@@ -10,7 +10,7 @@ import CreatePostModal from '../components/CreatePostModal';
 import { useDispatch, useSelector } from 'react-redux'
 import { Navigate } from 'react-router-dom';
 import EditPostModal from '../components/EditPostModal';
-import { getFriends, getNotifications } from '../api/user';
+import { getFriends, getNotifications, getRecommendedUsers } from '../api/user';
 import { setFriends } from '../features/user/friendSlice';
 import { setCredentials } from '../features/auth/authSlice';
 import { initSocket } from '../socket/initSocket.js'
@@ -26,6 +26,7 @@ const MainLayout = () => {
   const [checkingAuth, setCheckingAuth] = useState(true);   // handle initial load/render edge case
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [postToEdit, setPostToEdit] = useState(null);
+  const [recommended, setRecommended] = useState(null);
   const dispatch = useDispatch()
 
   const toggleNotifications = () => {
@@ -75,6 +76,18 @@ const MainLayout = () => {
       }
       fetchFriends()
 
+    } catch (error) {
+      console.log(error.message)
+    }
+  }, [])
+
+  useEffect(() => {
+    try {
+      const fetchRecommendedFriends = async () => {
+        const response = await getRecommendedUsers()
+        setRecommended(response)
+      }
+      fetchRecommendedFriends()
     } catch (error) {
       console.log(error.message)
     }
@@ -153,7 +166,7 @@ const MainLayout = () => {
       </main>
 
       <div className={`${styles.rightBar} ${showNotifications || showModal || showSearchbar ? styles.blurred : ''}`}>
-        <RightSidebar />
+        <RightSidebar recommended={recommended} />
       </div>
 
       {showNotifications && (

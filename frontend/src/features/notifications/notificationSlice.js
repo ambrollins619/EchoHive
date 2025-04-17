@@ -21,9 +21,15 @@ const chatSlice = createSlice({
         },
         setNotifications: (state, action) => {
             state.notifications = action.payload
+        },
+        markRead: (state, action) => {
+            const notification = state.notifications.find(n => n._id === action.payload);
+            if (notification) {
+                notification.isRead = true;
+            }        
         }
     },
 });
 
-export const { receiveNotification, setRead, setNotifications } = chatSlice.actions;
+export const { receiveNotification, setRead, setNotifications, markRead } = chatSlice.actions;
 export default chatSlice.reducer;

@@ -10,6 +10,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import PostPoll from './PostPoll';
 import { useSelector } from 'react-redux';
 import DeletePostModal from './DeletePostModal';
+import ghostImage from '../assets/ghost.webp'
 
 const Post = ({ post, innerRef, onDelete, handleEditPost, userVote }) => {
     const [localVote, setLocalVote] = useState(post.userVote || userVote);
@@ -80,14 +81,24 @@ const Post = ({ post, innerRef, onDelete, handleEditPost, userVote }) => {
             <div className={styles.postTopSection}>
                 <div className={styles.postTopLeftSection}>
                     <div className={styles.postProfile}>
-                        <Link to={`/profile/${post.userId.name}/posts`} className={styles.linkStyles}>
-                            <img src={post.userId.avatar || profileImage} alt="profile" className={styles.postProfileImage} />
-                        </Link>
+                        {
+                            post.isAnonymous ?
+                                <img src={ghostImage} alt="profile" className={styles.postProfileImage} /> :
+                                <Link to={`/profile/${post.userId.name}/posts`} className={styles.linkStyles}>
+                                    <img src={post.userId.avatar || profileImage} alt="profile" className={styles.postProfileImage} />
+                                </Link>
+                        }
                     </div>
                     <div className={styles.postProfileInfo}>
-                        <Link to={`/profile/${post.userId.name}/posts`} className={styles.linkStyles}>
-                            <p>{post.userId.name}</p>
-                        </Link>
+                        {
+                            post.isAnonymous ?
+                                <div>
+                                    <p>Anonymous</p>
+                                </div> :
+                                <Link to={`/profile/${post.userId.name}/posts`} className={styles.linkStyles}>
+                                    <p>{post.userId.name}</p>
+                                </Link>
+                        }
                         <div className={styles.postMeta}>
                             <span className={`${styles.postType} ${post.postType === 'confession' ?
                                 styles.confession : post.postType === 'meme' ?

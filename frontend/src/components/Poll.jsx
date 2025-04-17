@@ -78,7 +78,7 @@ const Poll = () => {
     const handleUpdateDrip = async (userId) => {
         // updating the drip
         const response = await updateDrip(drip._id, questionIndex - 1, userId)
-        console.log(response.questions[questionIndex - 1].options);
+        // console.log(response.questions[questionIndex - 1].options);
 
         queryClient.setQueryData(['question', questionIndex], (oldData) => ({
             ...oldData,
@@ -113,7 +113,7 @@ const Poll = () => {
     }
     const handleShuffle = async () => {
         const randomFriends = friends.sort(() => Math.random()).slice(0, 4).map(friend => friend._id)
-        console.log(randomFriends);
+        // console.log(randomFriends);
 
         const response = await shuffleOptions(drip?._id, questionIndex - 1, randomFriends)
 

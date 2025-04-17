@@ -102,12 +102,38 @@ export const searchUsers = async (searchQuery) => {
     }
 };
 
+export const getRecommendedUsers = async (searchQuery) => {
+    try {
+
+        const response = await axiosInstance.get(`/users/recommended`);
+
+        // console.log(response.data)
+        return response.data;
+
+    } catch (error) {
+        throw new Error(error.response?.data?.message || 'Failed to update password');
+    }
+};
+
 export const getNotifications = async () => {
     try {
 
         const response = await axiosInstance.get('/notifications')
 
-        console.log(response.data)
+        // console.log(response.data)
+        return response.data;
+
+    } catch (error) {
+        throw new Error(error.response?.data?.message || 'Failed to get notifications');
+    }
+}
+
+export const markNotificationRead = async (notificationId) => {
+    try {
+
+        const response = await axiosInstance.put(`/notifications/${notificationId}/read`)
+
+        // console.log(response.data)
         return response.data;
 
     } catch (error) {

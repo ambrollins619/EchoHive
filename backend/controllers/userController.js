@@ -174,7 +174,7 @@ export const toggleFriend = async (req, res) => {
 
         const updateQuery = {};
         const updateQueryFriend = {};
-        
+
         if (user.friends.some(friendId => newFriend._id.equals(friendId))) {
             updateQueryFriend.$pull = {}
             updateQueryFriend.$pull = { friendsOf: user._id }
@@ -218,9 +218,9 @@ export const getFriends = async (req, res) => {
 export const changePassword = async (req, res) => {
     try {
         const { currentPassword, newPassword } = req.body;
-        
+
         const user = await User.findById(req.user._id);
-        
+
         const isMatch = await user.matchPassword(currentPassword);
         if (!isMatch) {
             return res.status(403).json({ success: false, message: "Current password is incorrect" });
@@ -239,11 +239,11 @@ export const changePassword = async (req, res) => {
 export const searchUsers = async (req, res) => {
     try {
         const { query, page = 1, limit = 10 } = req.query;
-        
+
         if (!query || query.trim() === "") {
-            return res.status(400).json({ 
-                success: false, 
-                message: "Search query is required" 
+            return res.status(400).json({
+                success: false,
+                message: "Search query is required"
             });
         }
 
@@ -254,14 +254,14 @@ export const searchUsers = async (req, res) => {
             name: { $regex: query, $options: 'i' },
             _id: { $ne: req.user._id } // Exclude the current user from results
         })
-        .select('-password -verificationCode -verificationCodeExpiry -friendsOf -notifications -reactedPosts -comments')
-        .skip(skip)
-        .limit(parseInt(limit))
-        .populate({
-            path: 'collegeId',
-            model: 'College',
-            select: 'name'
-        });
+            .select('-password -verificationCode -verificationCodeExpiry -friendsOf -notifications -reactedPosts -comments')
+            .skip(skip)
+            .limit(parseInt(limit))
+            .populate({
+                path: 'collegeId',
+                model: 'College',
+                select: 'name'
+            });
 
         const total = await User.countDocuments({
             name: { $regex: query, $options: 'i' },
@@ -278,9 +278,30 @@ export const searchUsers = async (req, res) => {
 
     } catch (error) {
         console.error("Search users error:", error.message);
-        return res.status(500).json({ 
-            success: false, 
-            message: "Server error while searching users" 
+        return res.status(500).json({
+            success: false,
+            message: "Server error while searching users"
+        });
+    }
+}
+
+export const recommendedUsers = async (req, res) => {
+    try {
+        const { limit = 10 } = req.query;
+        
+        const recommendedUsers = await User.aggregate([
+            { $match: { _id: { $nin: [...req.user.friends, req.user._id] } } },
+            { $sample: { size: limit } },
+            { $project: { _id: 1, name: 1, avatar: 1 } }, 
+        ]);        
+
+        return res.status(200).json(recommendedUsers)
+
+    } catch (error) {
+        console.error("Search users error:", error.message);
+        return res.status(500).json({
+            success: false,
+            message: "Server error while searching users"
         });
     }
 }

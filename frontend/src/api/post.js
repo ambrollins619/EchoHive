@@ -1,7 +1,7 @@
 import axiosInstance from './axiosInstance'
 import { useSelector } from 'react-redux'
 
-export const getLatestPosts = async (isGlobal, page, user) => {
+export const getLatestPosts = async (isGlobal, page, user, postType = 'All') => {
 
     try {
         let apiCallUrl = '/posts?'
@@ -13,6 +13,9 @@ export const getLatestPosts = async (isGlobal, page, user) => {
                 throw new Error('User college information not available');
             }
             apiCallUrl += `collegeId=${user.collegeId.toString()}&page=${page}`
+        }
+        if(postType){
+            apiCallUrl += `&postType=${postType}`
         }
         const response = await axiosInstance.get(apiCallUrl)
         // console.log(response.data);
@@ -29,7 +32,7 @@ export const getLatestPosts = async (isGlobal, page, user) => {
     }
 }
 
-export const getTrendingPosts = async (isGlobal, page, user) => {
+export const getTrendingPosts = async (isGlobal, page, user, postType = 'All') => {
     try {
 
         let apiCallUrl = '/posts/trending?'
@@ -42,6 +45,10 @@ export const getTrendingPosts = async (isGlobal, page, user) => {
             }
             apiCallUrl += `collegeId=${user.collegeId.toString()}&page=${page}`
         }
+        if(postType){
+            apiCallUrl += `&postType=${postType}`
+        }
+
         const response = await axiosInstance.get(apiCallUrl)
         // console.log(response.data);
         return response.data

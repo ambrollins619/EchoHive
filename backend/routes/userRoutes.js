@@ -5,6 +5,7 @@ import {
     editUserProfile, 
     getFriends, 
     getUserProfile, 
+    recommendedUsers, 
     searchUsers, 
     toggleFriend 
 } from "../controllers/userController.js";
@@ -13,6 +14,7 @@ const userRoutes = express.Router();
 const upload = multer({ storage: multer.memoryStorage() })
 
 // Profile specific routes
+userRoutes.get('/recommended', protect, recommendedUsers)
 userRoutes.get('/get-friends', protect, getFriends)
 userRoutes.patch('/update-password', protect, changePassword)
 userRoutes.get('/search', protect, searchUsers);

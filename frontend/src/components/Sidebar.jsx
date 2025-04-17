@@ -43,10 +43,10 @@ const Sidebar = ({ toggleNotifications, toggleSearchbar, showSearchbar, setPostM
             </div>
 
             <nav className={styles.nav}>
-                <Link to="/" className={styles.navItem}>
+                {/* <Link to="/" className={styles.navItem}>
                     <FaHome className={styles.icon} />
                     <span>Home</span>
-                </Link>
+                </Link> */}
                 <div className={styles.navItem} onClick={toggleSearchbar}>
                     <FaSearch className={styles.icon} />
                     <span>Search</span>

@@ -2,7 +2,7 @@ import React from 'react'
 import { useLocation, Link } from 'react-router-dom'
 import styles from '../styles/PostFilters.module.css'
 
-const PostFilters = () => {
+const PostFilters = ({ setPostType, postType }) => {
     const { pathname } = useLocation()
     return (
         <>
@@ -19,10 +19,22 @@ const PostFilters = () => {
                 </Link> */}
             </div>
             <div className={styles.postTypeFilters}>
-                <button className={`${styles.active} ${styles.filterBtn}`}>All</button>
-                <button className={styles.filterBtn}>😂 Meme</button>
-                <button className={styles.filterBtn}>❤️ Confession</button>
-                <button className={styles.filterBtn}>💡Question</button>
+                <button
+                    className={`${postType === 'All' ? styles.active : ""} ${styles.filterBtn}`}
+                    onClick={() => setPostType('All')}
+                >All</button>
+                <button
+                    className={`${postType === 'meme' ? styles.active : ""} ${styles.filterBtn}`}
+                    onClick={() => setPostType('meme')}
+                >😂 Meme</button>
+                <button
+                    className={`${postType === 'confession' ? styles.active : ""} ${styles.filterBtn}`}
+                    onClick={() => setPostType('confession')}
+                >❤️ Confession</button>
+                <button
+                    className={`${postType === 'question' ? styles.active : ""} ${styles.filterBtn}`}
+                    onClick={() => setPostType('question')}
+                >💡Question</button>
             </div>
         </>
     )

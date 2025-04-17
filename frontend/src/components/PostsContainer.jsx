@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux'
 import Post from './Post'
 import Spinner from './Spinner'
 
-const PostsContainer = ({handleEditPost}) => {
+const PostsContainer = ({handleEditPost, postType}) => {
 
   const { ref, inView } = useInView({})
   const { pathname } = useLocation();
@@ -26,13 +26,13 @@ const PostsContainer = ({handleEditPost}) => {
     mutationFn: ({ postId }) => deletePost(postId),
     onMutate: async ({ postId }) => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await queryClient.cancelQueries(['posts', isGlobal, pathname])
+      await queryClient.cancelQueries(['posts', isGlobal, pathname, postType])
 
       // Snapshot previous value
-      const previousData = queryClient.getQueryData(['posts', isGlobal, pathname])
+      const previousData = queryClient.getQueryData(['posts', isGlobal, pathname, postType])
 
       // Optimistically update the cache
-      queryClient.setQueryData(['posts', isGlobal, pathname], (oldData) => {
+      queryClient.setQueryData(['posts', isGlobal, pathname, postType], (oldData) => {
         if (!oldData) return oldData
         return {
           ...oldData,
@@ -62,12 +62,12 @@ const PostsContainer = ({handleEditPost}) => {
     isFetchingNextPage,
     hasNextPage
   } = useInfiniteQuery({
-    queryKey: ['posts', isGlobal, pathname],
+    queryKey: ['posts', isGlobal, pathname, postType],
     queryFn: ({ pageParam }) => {
       if (pathname.includes('trending')) {
-        return getTrendingPosts(isGlobal, pageParam, user)
+        return getTrendingPosts(isGlobal, pageParam, user, postType)
       } else {
-        return getLatestPosts(isGlobal, pageParam, user)
+        return getLatestPosts(isGlobal, pageParam, user, postType)
       }
     },
     initialPageParam: 1,
