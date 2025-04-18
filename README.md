@@ -14,8 +14,8 @@ A social platform designed for college students to share content anonymously or 
 - **Content Options**:
   - Images/GIFs (via Cloudinary)
   - Pollspublic
-- **Visibility**: Anonymous or 
-- Comments with threading
+- **Visibility**: Anonymous or Public
+- Comments on posts
 - College-specific or global visibility
 - Commenting system
 
