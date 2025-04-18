@@ -77,13 +77,13 @@ const VerifyCode = () => {
                         />
                     </div>
                     <div className={styles.resendCode}>
-                        <p>
+                        <div>
                             Didn't get the code? 
                             <span onClick={handleResendotp}>Click to resend</span>
                             {
                                 resend && <Spinner/>
                             }
-                        </p>
+                        </div>
                     </div>
                     <button onClick={handleOtpSubmit} className={styles.btnStyles}>
                         Verify
