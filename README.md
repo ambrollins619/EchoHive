@@ -90,7 +90,7 @@ A social platform designed for college students to share content anonymously or 
     npm install
    ```
 4. Environment Variables
-    server/.env:
+    backend/.env:
     ```env
     JWT_SECRET=your_jwt_secret
     MONGODB_URI=mongodb+srv://your-mongo-uri
