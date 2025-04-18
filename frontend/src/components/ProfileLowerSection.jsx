@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import styles from '../styles/ProfileLowerSection.module.css'
 import { Link, useLocation } from 'react-router-dom'
 import UserPosts from './UserPosts'
-import ReactedPosts from './ReactedPosts'
 import UserComments from './UserComments'
 
 const ProfileLowerSection = ({ username, user, handleEditPost, deletePostMutation }) => {
