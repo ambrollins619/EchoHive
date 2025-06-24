@@ -1,3 +1,10 @@
+.dripsPage {
+  background-image: url('/assets/giphy.webp');
+  background-size: cover;        /* Cover entire area */
+  background-position: center;   /* Center the image */
+  background-repeat: no-repeat;  /* Avoid repeating */
+  min-height: 100vh;             /* Full height of screen */
+}
 
 .dripsPageNav{
     display: flex;

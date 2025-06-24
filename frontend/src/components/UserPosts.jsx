@@ -1,11 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import styles from '../styles/PostsContainer.module.css'
-import profileImage from '../assets/jack.png'
-import postImage1 from '../assets/car.png'
-import postImage2 from '../assets/cat.gif'
-import { BsThreeDots } from "react-icons/bs";
-import { FaRegComment } from "react-icons/fa";   // Comment icon
-import { FaArrowUp, FaArrowDown } from "react-icons/fa6"; // Upvote & Downvote icons
 import Post from './Post'
 
 const UserPosts = ({ posts, reactedPosts, handleEditPost, deletePostMutation }) => {

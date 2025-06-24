@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react'
 import TextareaAutosize from 'react-textarea-autosize';
 import styles from '../styles/commentsContainer.module.css'
 import profileImage from '../assets/megan.png'
-import { FaArrowDown, FaArrowUp, FaRegComment } from 'react-icons/fa';
-import moment from 'moment';
 import Comment from './Comment';
 import { useSelector } from 'react-redux';
 import { createComment, deleteComment } from '../api/comment';

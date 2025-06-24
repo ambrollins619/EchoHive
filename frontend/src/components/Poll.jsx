@@ -126,14 +126,6 @@ const Poll = () => {
         );
     }
 
-    if (isLoading) {
-        return (
-            <div className={styles.pollContainer}>
-                <Spinner />
-            </div>
-        )
-    }
-
     if (isError) {
         return (
             <div className={styles.pollContainer}>
@@ -217,55 +209,62 @@ const Poll = () => {
                         {questionIndex} / {drip?.questions?.length}
                     </div>
                 </div>
-                <div className={styles.question}>
-                    <div className={styles.questionInfo}>
-                        {question?.text && (
+                {
+                    isLoading ?
+                        <Spinner /> : (
                             <>
-                                <div className={styles.emoji}>
-                                    {[...question.text][0] || '❓'} {/* Fallback emoji */}
+                                <div className={styles.question}>
+                                    <div className={styles.questionInfo}>
+                                        {question?.text && (
+                                            <>
+                                                <div className={styles.emoji}>
+                                                    {[...question.text][0] || '❓'} {/* Fallback emoji */}
+                                                </div>
+                                                <div className={styles.statement}>
+                                                    {question.text.slice([...question.text][0].length + 1).trim()}
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
+                                    <div className={styles.options}>
+                                        {
+                                            question?.options.map(({ userId: user }) => {
+
+                                                return (
+                                                    <div key={user._id} className={`${styles.option} ${question?.questionResponse ?
+                                                        question?.questionResponse?.selectedOption === user._id ?
+                                                            styles.selectedOption :
+                                                            styles.freezedOption : ""}`}
+                                                        onClick={() => handleUpdateDrip(user._id)}
+                                                    >
+                                                        <img src={user.avatar || profileImage} alt="profile" className={styles.optionProfileImage} />
+                                                        {user.name}
+                                                    </div>
+                                                )
+                                            })
+                                        }
+                                    </div>
                                 </div>
-                                <div className={styles.statement}>
-                                    {question.text.slice([...question.text][0].length + 1).trim()}
+                                <div className={styles.questionOptions}>
+                                    <button
+                                        className={`${styles.questionOption} ${question?.questionResponse?._id ? styles.disabled : ''}`}
+                                        onClick={handleShuffle}
+                                    >
+                                        <FaRandom size={25} />
+                                        Shuffle
+                                    </button>
+
+                                    <button
+                                        className={`${styles.questionOption} ${question?.questionResponse?._id ? styles.disabled : ''}`}
+                                        onClick={handleSkip}
+                                    >
+                                        <FaStepForward size={25} style={{ transform: "scaleY(0.8)" }} />
+                                        Skip
+                                    </button>
                                 </div>
                             </>
-                        )}
-                    </div>
-                    <div className={styles.options}>
-                        {
-                            question?.options.map(({ userId: user }) => {
-
-                                return (
-                                    <div key={user._id} className={`${styles.option} ${question?.questionResponse ?
-                                        question?.questionResponse?.selectedOption === user._id ?
-                                            styles.selectedOption :
-                                            styles.freezedOption : ""}`}
-                                        onClick={() => handleUpdateDrip(user._id)}
-                                    >
-                                        <img src={user.avatar || profileImage} alt="profile" className={styles.optionProfileImage} />
-                                        {user.name}
-                                    </div>
-                                )
-                            })
-                        }
-                    </div>
-                </div>
-                <div className={styles.questionOptions}>
-                    <button
-                        className={`${styles.questionOption} ${question?.questionResponse?._id ? styles.disabled : ''}`}
-                        onClick={handleShuffle}
-                    >
-                        <FaRandom size={25} />
-                        Shuffle
-                    </button>
-
-                    <button
-                        className={`${styles.questionOption} ${question?.questionResponse?._id ? styles.disabled : ''}`}
-                        onClick={handleSkip}
-                    >
-                        <FaStepForward size={25} style={{ transform: "scaleY(0.8)" }} />
-                        Skip
-                    </button>
-                </div>
+                        )
+                }
             </div>
             <div
                 className={`${styles.arrow} ${parseInt(questionIndex) === drip?.questions?.length ? styles.freezedArrow : ""}`}

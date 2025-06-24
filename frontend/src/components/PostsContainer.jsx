@@ -1,10 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styles from '../styles/PostsContainer.module.css'
-import profileImage from '../assets/jack.png'
-import postImage1 from '../assets/car.png'
-import postImage2 from '../assets/cat.gif'
 import { useInView } from 'react-intersection-observer'
-import { Link, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { deletePost, getLatestPosts, getTrendingPosts } from '../api/post'
 import { useSelector } from 'react-redux'
@@ -13,7 +10,12 @@ import Spinner from './Spinner'
 
 const PostsContainer = ({handleEditPost, postType}) => {
 
-  const { ref, inView } = useInView({})
+  const { ref, inView } = useInView({
+    threshold: 1
+  })
+  // threshold-> fraction of innerRef component
+  // that must be visible before inView becomes true
+  
   const { pathname } = useLocation();
   const isGlobal = pathname.includes('global')
   const [posts, setPosts] = useState([])
@@ -77,6 +79,7 @@ const PostsContainer = ({handleEditPost, postType}) => {
   })
 
   useEffect(() => {
+    console.log(data)
     if (inView && hasNextPage) {
       // console.log('Fire!')
       fetchNextPage()
