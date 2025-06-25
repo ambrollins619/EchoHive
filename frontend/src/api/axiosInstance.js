@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:3000/api', // my base URL
+    baseURL: 'https://echohive-backend.onrender.com/api', // my base URL
     withCredentials: true, // this will send the cookie
 })
 
