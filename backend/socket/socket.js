@@ -17,7 +17,7 @@ app.use(cors(corsOptions));
 
 const io = new Server(server, {
     cors: {
-        origin: 'http://localhost:5173',
+        origin: 'https://echohive-frontend.onrender.com',
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
         credentials: true, // ADD THIS if you want cookies there too
         allowedHeaders: ['Content-Type', 'Authorization'], // Required for credentials
