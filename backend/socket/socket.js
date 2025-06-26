@@ -14,6 +14,8 @@ const corsOptions = {
 const server = http.createServer(app);
 
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Enable preflight for all routes
+
 
 const io = new Server(server, {
     cors: {
