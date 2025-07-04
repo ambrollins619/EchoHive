@@ -5,12 +5,10 @@ export const voteComment = async (isUpvote,postId,commentId) => {
         const response = await axiosInstance.post(`/posts/${postId}/comments/${commentId}/vote`, {
             isUpvote
         })
-        // console.log(response.data)
         return response.data
     } catch (error) {
-        console.error('Failed to vote post:', error);
-        
-        // Convert generic Axios errors to more specific messages
+        console.error('Failed to vote comment:', error);
+
         const errorMessage = error.response?.data?.message 
             || error.message 
             || 'Failed to vote post';
@@ -21,21 +19,18 @@ export const voteComment = async (isUpvote,postId,commentId) => {
 
 export const createComment = async (postId, content) => {
     try {
-        // creating a comment yo
+        // creating a comment 
         const response = await axiosInstance.post(`/posts/${postId}/comments`, {
             content
         })
-
-        // console.log(response.data)
         
         return response.data
     } catch (error) {
-        console.error('Failed to vote post:', error);
+        console.error('Failed to create comment:', error);
         
-        // Convert generic Axios errors to more specific messages
         const errorMessage = error.response?.data?.message 
             || error.message 
-            || 'Failed to vote post';
+            || 'Failed to create comment';
         
         throw new Error(errorMessage);
     }
@@ -43,18 +38,15 @@ export const createComment = async (postId, content) => {
 
 export const editComment = async (postId, content, commentId) => {
     try {
-        // creating a comment yo
+        // editing a comment
         const response = await axiosInstance.put(`/posts/${postId}/comments/${commentId}`, {
             content
         })
-        
-        // console.log(response.data)
         
         return response.data
     } catch (error) {
         console.error('Failed to edit comment:', error);
         
-        // Convert generic Axios errors to more specific messages
         const errorMessage = error.response?.data?.message 
             || error.message 
             || 'Failed to edit comment';
@@ -65,16 +57,13 @@ export const editComment = async (postId, content, commentId) => {
 
 export const deleteComment = async (postId, commentId) => {
     try {
-        // creating a comment yo
+        // deleting a comment
         const response = await axiosInstance.delete(`/posts/${postId}/comments/${commentId}`)
-        
-        // console.log(response.data)
         
         return response.data
     } catch (error) {
         console.error('Failed to delete comment:', error);
         
-        // Convert generic Axios errors to more specific messages
         const errorMessage = error.response?.data?.message 
             || error.message 
             || 'Failed to delete comment';

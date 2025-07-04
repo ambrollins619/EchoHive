@@ -1,5 +1,4 @@
 import axiosInstance from './axiosInstance'
-import { useSelector } from 'react-redux'
 
 export const getLatestPosts = async (isGlobal, page, user, postType = 'All') => {
 
@@ -18,15 +17,14 @@ export const getLatestPosts = async (isGlobal, page, user, postType = 'All') => 
             apiCallUrl += `&postType=${postType}`
         }
         const response = await axiosInstance.get(apiCallUrl)
-        // console.log(response.data);
+        
         return response.data
     } catch (error) {
-        console.error('Failed to fetch posts:', error);
+        console.error('Failed to fetch latest posts:', error);
 
-        // Convert generic Axios errors to more specific messages
         const errorMessage = error.response?.data?.message
             || error.message
-            || 'Failed to fetch posts';
+            || 'Failed to fetch latest posts';
 
         throw new Error(errorMessage);
     }
@@ -50,15 +48,14 @@ export const getTrendingPosts = async (isGlobal, page, user, postType = 'All') =
         }
 
         const response = await axiosInstance.get(apiCallUrl)
-        // console.log(response.data);
+        
         return response.data
     } catch (error) {
-        console.error('Failed to fetch posts:', error);
+        console.error('Failed to fetch trending posts:', error);
 
-        // Convert generic Axios errors to more specific messages
         const errorMessage = error.response?.data?.message
             || error.message
-            || 'Failed to fetch posts';
+            || 'Failed to fetch trending posts';
 
         throw new Error(errorMessage);
     }
@@ -71,7 +68,6 @@ export const votePost = async (postId, isUpvote) => {
     } catch (error) {
         console.error('Failed to vote post:', error);
 
-        // Convert generic Axios errors to more specific messages
         const errorMessage = error.response?.data?.message
             || error.message
             || 'Failed to vote post';
@@ -83,16 +79,14 @@ export const votePost = async (postId, isUpvote) => {
 export const getPost = async (postId) => {
     try {
         const response = await axiosInstance.get(`/posts/${postId}`)
-        // console.log(response.data);
 
         return response.data
     } catch (error) {
-        console.error('Failed to vote post:', error);
+        console.error('Failed to fetch post:', error);
 
-        // Convert generic Axios errors to more specific messages
         const errorMessage = error.response?.data?.message
             || error.message
-            || 'Failed to vote post';
+            || 'Failed to fetch post';
 
         throw new Error(errorMessage);
     }
@@ -105,13 +99,11 @@ export const createPost = async (formData) => {
                 'Content-Type': 'multipart/form-data'
             }
         })
-        // console.log(response.data);
 
         return response.data
     } catch (error) {
         console.error('Failed to create post:', error);
 
-        // Convert generic Axios errors to more specific messages
         const errorMessage = error.response?.data?.message
             || error.message
             || 'Failed to create post';
@@ -123,16 +115,14 @@ export const createPost = async (formData) => {
 export const deletePost = async (postId) => {
     try {
         const response = await axiosInstance.delete(`/posts/${postId}`)
-        // console.log(response.data);
 
         return response.data
     } catch (error) {
-        console.error('Failed to create post:', error);
+        console.error('Failed to delete post:', error);
 
-        // Convert generic Axios errors to more specific messages
         const errorMessage = error.response?.data?.message
             || error.message
-            || 'Failed to create post';
+            || 'Failed to delete post';
 
         throw new Error(errorMessage);
     }
@@ -146,7 +136,6 @@ export const updatePost = async (formData,postId) => {
                 'Content-Type': 'multipart/form-data',
             },
         });
-        // console.log(response.data)
         
         return response.data;
     } catch (error) {

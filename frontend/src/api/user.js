@@ -5,15 +5,14 @@ export const getUserByName = async (username) => {
         const response = await axiosInstance.get('/users', {
             params: { username }
         })
-        // console.log(response.data.userByName)
+        
         return response.data.userByName
     } catch (error) {
-        console.error('Failed to fecth user:', error);
+        console.error('Failed to fecth user by name:', error);
 
-        // Convert generic Axios errors to more specific messages
         const errorMessage = error.response?.data?.message
             || error.message
-            || 'Failed to fetch user';
+            || 'Failed to fetch user by name';
 
         throw new Error(errorMessage);
     }
@@ -25,12 +24,11 @@ export const toggleFriend = async (friendId) => {
 
         return response.data
     } catch (error) {
-        console.error('Failed to fetch user:', error);
+        console.error('Failed to toggle friend:', error);
 
-        // Convert generic Axios errors to more specific messages
         const errorMessage = error.response?.data?.message
             || error.message
-            || 'Failed to fetch user';
+            || 'Failed to toggle friend';
 
         throw new Error(errorMessage);
     }
@@ -39,15 +37,14 @@ export const toggleFriend = async (friendId) => {
 export const getFriends = async () => {
     try {
         const response = await axiosInstance.get(`/users/get-friends`)
-        // console.log(response.data)
+        
         return response.data
     } catch (error) {
-        console.error('Failed to fecth user:', error);
+        console.error('Failed to fetch friends:', error);
 
-        // Convert generic Axios errors to more specific messages
         const errorMessage = error.response?.data?.message
             || error.message
-            || 'Failed to fetch user';
+            || 'Failed to fetch friends';
 
         throw new Error(errorMessage);
     }
@@ -62,11 +59,10 @@ export const updateProfile = async (formData, userId) => {
                 'Content-Type': 'multipart/form-data',
             },
         });
-        // console.log(response.data)
 
         return response.data;
     } catch (error) {
-        throw new Error(error.response?.data?.message || 'Failed to update post');
+        throw new Error(error.response?.data?.message || 'Failed to update profile');
     }
 };
 
@@ -77,7 +73,6 @@ export const updatePassword = async (currentPassword, newPassword) => {
             currentPassword,
             newPassword
         });
-        // console.log(response.data)
 
         return response.data;
     } catch (error) {
@@ -94,11 +89,10 @@ export const searchUsers = async (searchQuery) => {
             }
         });
 
-        // console.log(response.data)
         return response.data;
 
     } catch (error) {
-        throw new Error(error.response?.data?.message || 'Failed to update password');
+        throw new Error(error.response?.data?.message || 'Failed to search users');
     }
 };
 
@@ -107,11 +101,10 @@ export const getRecommendedUsers = async (searchQuery) => {
 
         const response = await axiosInstance.get(`/users/recommended`);
 
-        // console.log(response.data)
         return response.data;
 
     } catch (error) {
-        throw new Error(error.response?.data?.message || 'Failed to update password');
+        throw new Error(error.response?.data?.message || 'Failed to fetch recommended users');
     }
 };
 
@@ -120,11 +113,10 @@ export const getNotifications = async () => {
 
         const response = await axiosInstance.get('/notifications')
 
-        // console.log(response.data)
         return response.data;
 
     } catch (error) {
-        throw new Error(error.response?.data?.message || 'Failed to get notifications');
+        throw new Error(error.response?.data?.message || 'Failed to fetch notifications');
     }
 }
 
@@ -133,10 +125,9 @@ export const markNotificationRead = async (notificationId) => {
 
         const response = await axiosInstance.put(`/notifications/${notificationId}/read`)
 
-        // console.log(response.data)
         return response.data;
 
     } catch (error) {
-        throw new Error(error.response?.data?.message || 'Failed to get notifications');
+        throw new Error(error.response?.data?.message || 'Failed to mark notification read');
     }
 }
