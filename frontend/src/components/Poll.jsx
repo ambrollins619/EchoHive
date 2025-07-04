@@ -8,8 +8,8 @@ import lock from '../assets/Lock.gif'
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { getDrip, getQuestion, shuffleOptions, skipLast, updateDrip } from '../api/drips';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import Spinner from './Spinner'
 import { useSelector } from 'react-redux'
+import PulsingDots from './PulsingDots';
 
 const Poll = () => {
     const { questionIndex } = useParams()
@@ -126,14 +126,18 @@ const Poll = () => {
         }
         );
     }
-
+    
     if (isError) {
         return (
-            <div className={styles.pollContainer}>
-                Some Error occured...
+          <div className={styles.pollContainer}>
+            <div className={styles.questions}>
+               <div className={styles.errorText}>
+                  Some Error Occurred...
+                </div>
             </div>
+          </div>
         )
-    }
+      }
 
 
     if (Number(questionIndex) === 0) {
@@ -212,7 +216,9 @@ const Poll = () => {
                 </div>
                 {
                     isLoading ?
-                        <Spinner /> : (
+                    <div className={styles.loaderStyles}>
+                        <PulsingDots color={'pink'}/>
+                    </div> : (
                             <>
                                 <div className={styles.question}>
                                     <div className={styles.questionInfo}>

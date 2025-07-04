@@ -73,3 +73,19 @@
         transparent 100%
     );
 }
+
+
+.loaderStyles{
+    flex: 1;
+    align-self: center;
+    padding: 150px 0;
+}
+
+.errorText{
+    flex: 1;
+    align-self: center;
+    padding: 150px 0;
+    font-size: 20px;
+    color: #fc0585;
+    text-shadow: 0 0 5px #fc0585de, 0 0 10px #fc0585a0;
+}
