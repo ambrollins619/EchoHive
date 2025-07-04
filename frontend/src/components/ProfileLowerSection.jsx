@@ -9,7 +9,6 @@ const ProfileLowerSection = ({ username, user, handleEditPost, deletePostMutatio
   const [comments, setComments] = useState(null)
 
   useEffect(()=>{
-    // console.log("usercomments",user.comments)
     setComments(user?.comments)
   },[user])
 

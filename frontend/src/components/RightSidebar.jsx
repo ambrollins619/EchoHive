@@ -49,7 +49,7 @@ const RightSidebar = ({ recommended }) => {
                                 {
                                     displayedUsers?.map((user, index) => {
                                         return (
-                                            <div key={index} className={styles.recommendedUser}>
+                                            <div key={user._id} className={styles.recommendedUser}>
                                                 <Link to={`/profile/${user.name}/posts`} className={styles.linkStyles}>
                                                     <div className={styles.recommendedUserLeft}>
                                                         <div className={styles.profile}>

@@ -35,7 +35,6 @@ const Post = ({ post, innerRef, onDelete, handleEditPost, userVote }) => {
 
     const handleVote = async (voteType) => {
         try {
-            const newVoteState = voteType === 'upvote';
 
             // Optimistic UI update
             if (localVote === voteType) {

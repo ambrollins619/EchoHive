@@ -1,4 +1,3 @@
-// components/DeletePostModal.jsx
 import React from 'react';
 import styles from '../styles/DeletePostModal.module.css';
 

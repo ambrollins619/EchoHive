@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDebounceCallback } from 'usehooks-ts';
+import { useDebounceCallback, useDebounceValue } from 'usehooks-ts';
 import { useQuery } from '@tanstack/react-query';
 import styles from '../styles/SearchSidebar.module.css';
 import { FaSearch } from "react-icons/fa";
@@ -9,37 +9,42 @@ import ProfileImage from '../assets/jack.png'
 import { Link, useNavigate } from 'react-router-dom'
 
 const SearchSidebar = ({ onClose }) => {
-  const [searchValue, setSearchValue] = useState('');
+  // const [searchValue, setSearchValue] = useState('');
   const [showRecent, setShowRecent] = useState(true);
   const navigate = useNavigate('')
   const [localRecent, setLocalRecent] = useState(null)
+  const [searchResults, setSearchResults]=useState([])
+  const [isLoading,setIsLoading]=useState(false)
+  const [isError,setIsError]=useState(false)
+  const [searchValue, setSearchValue] = useState('')
+  const [debouncedSearchValue, setDebouncedSearchValue]=useDebounceValue(searchValue,300)
 
   useEffect(() => {
     const recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || []
     setLocalRecent(recentSearches)
   }, [])
 
-  // Debounce the search input (300ms delay)
-  const debouncedSearch = useDebounceCallback(
-    (value) => {
-      if (value.length >= 2) {
-        refetch(); // Trigger React Query refetch
+   useEffect(() => {
+    const getSearchResults = async () => {
+      try {
+        setIsLoading(true)
+        const res=await searchUsers(debouncedSearchValue)
+        console.log('hey\n')
+        setSearchResults(res)
+      } catch (error) {
+        setIsError(true)
+        const message = error?.response?.data?.message || error?.message ||
+          "Some error occured in fetching results"
+        console.error("Error fetching results: ", message)
+      } finally{
+        setIsLoading(false)
       }
-    },
-    3000
-  );
-
-  const {
-    data: searchResults,
-    isLoading,
-    isError,
-    refetch,
-  } = useQuery({
-    queryKey: ['searchUsers', searchValue],
-    queryFn: () => searchUsers(searchValue),
-    enabled: false, // Disable automatic fetching
-    staleTime: 30000,
-  });
+    }
+    if(debouncedSearchValue.length>=2){
+      setIsError(false)
+      getSearchResults()
+    }
+  }, [debouncedSearchValue]) 
 
   const handleSearchChange = (e) => {
     const value = e.target.value;
@@ -47,7 +52,6 @@ const SearchSidebar = ({ onClose }) => {
 
     if (value.length >= 2) {
       setShowRecent(false);
-      debouncedSearch(value); // Will trigger refetch after debounce
     } else {
       setShowRecent(true);
     }

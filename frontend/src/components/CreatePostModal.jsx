@@ -1,10 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { ModalContext } from '../context/modalContext';
 import styles from '../styles/CreatePostModal.module.css'
 import { createPortal } from 'react-dom'
-import profileImage from '../assets/megan.png'
 import { FaGhost, FaGlobe } from "react-icons/fa";
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
 import { createPost } from '../api/post';
 
 const CreatePostModal = ({ togglePostModalOpen }) => {
@@ -197,7 +195,6 @@ const CreatePostModal = ({ togglePostModalOpen }) => {
                     <button
                         onClick={() => mediaRef.current.click()}
                         className={file || poll.length > 0 ? styles.noUpload : ""}
-                        aria-label="Upload media"
                         disabled={poll.length > 0}
                     >
                         {poll.length > 0 ? "Poll active" : "Upload Image"}

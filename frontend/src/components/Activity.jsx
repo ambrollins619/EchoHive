@@ -20,7 +20,7 @@ const Activity = () => {
                 <Spinner/> : 
                 isError ? 
                 <p>Some Error occurred</p> :
-                activities?.reverse().map((activity) => {
+                activities?.slice().reverse().map((activity) => {
                     return (
                         <div key={activity._id} className={styles.activity}>
                             <img src={activity.selectedOption.avatar || profileImage} alt="profile image" />

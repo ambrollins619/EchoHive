@@ -1,42 +1,29 @@
-// Sidebar.jsx
-import React, { useContext, useState } from 'react';
+import { useState } from 'react';
 import {
-    FaHome,
     FaSearch,
     FaCompass,
     FaFilm,
-    FaEnvelope,
     FaHeart,
-    FaPlusSquare,
     FaUser,
-    FaSignOutAlt,
     FaCog
 } from 'react-icons/fa';
 import styles from '../styles/ShrinkedSidebar.module.css';
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux';
 
-const ShrinkedSidebar = ({ toggleNotifications, toggleSearchbar, showSearchbar }) => {
+const ShrinkedSidebar = () => {
 
     const [settingsOptions, setSettingsOptions] = useState(false)
     const user = useSelector((state)=>state.auth.user)
 
-    const handleLogout = () => {
-
-    }
-
     return (
-        <div className={`${styles.sidebar} ${showSearchbar ? styles.searchBarOpen : ""}`}>
+        <div className={`${styles.sidebar}`}>
             <div className={styles.logo}>
                 <h1>EchoHive</h1>
             </div>
 
             <nav className={styles.nav}>
-                {/* <Link to="/" className={styles.navItem}>
-                    <FaHome className={styles.icon} />
-                    <span>Home</span>
-                </Link> */}
-                <Link to="/explore/global" className={styles.navItem} onClick={toggleSearchbar}>
+                <Link to="/explore/global" className={styles.navItem}>
                     <FaSearch className={styles.icon} />
                     <span>Search</span>
                 </Link>
@@ -48,7 +35,7 @@ const ShrinkedSidebar = ({ toggleNotifications, toggleSearchbar, showSearchbar }
                     <FaFilm className={styles.icon} />
                     <span>Drips</span>
                 </Link>
-                <Link to="/explore/global" className={styles.navItem} onClick={toggleNotifications}>
+                <Link to="/explore/global" className={styles.navItem}>
                     <FaHeart className={styles.icon} />
                     <span>Notifications</span>
                 </Link>

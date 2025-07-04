@@ -18,7 +18,6 @@ const PostsContainer = ({handleEditPost, postType}) => {
   
   const { pathname } = useLocation();
   const isGlobal = pathname.includes('global')
-  const [posts, setPosts] = useState([])
   const user = useSelector((state) => state.auth.user)
 
 
@@ -27,6 +26,8 @@ const PostsContainer = ({handleEditPost, postType}) => {
   const deletePostMutation = useMutation({
     mutationFn: ({ postId }) => deletePost(postId),
     onMutate: async ({ postId }) => {
+      // on mutate gets called event though our query has not settled
+
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
       await queryClient.cancelQueries(['posts', isGlobal, pathname, postType])
 
@@ -48,10 +49,13 @@ const PostsContainer = ({handleEditPost, postType}) => {
     },
     onError: (err, variables, context) => {
       // Revert to previous data if mutation fails
-      queryClient.setQueryData(['posts', isGlobal, pathname], context.previousData)
+      queryClient.setQueryData(['posts', isGlobal, pathname, postType], context.previousData)
     },
     onSettled: () => {
-      queryClient.invalidateQueries(['posts', isGlobal, pathname])
+      // this thing runs after error or success
+      // even after update or after error
+      // we refetch data to ensure it stays up to date
+      queryClient.invalidateQueries(['posts', isGlobal, pathname, postType])
     },
   })
 
@@ -79,7 +83,6 @@ const PostsContainer = ({handleEditPost, postType}) => {
   })
 
   useEffect(() => {
-    console.log(data)
     if (inView && hasNextPage) {
       // console.log('Fire!')
       fetchNextPage()

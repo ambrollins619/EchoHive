@@ -85,6 +85,7 @@ const Poll = () => {
             questionResponse: response.questions[questionIndex - 1].questionResponse
         }));
 
+        // here we are handling the submission logic
         if (Number(questionIndex) === drip.questions.length) {
             navigate(`/drips/poll/0`)
         }
@@ -112,7 +113,7 @@ const Poll = () => {
         }
     }
     const handleShuffle = async () => {
-        const randomFriends = friends.sort(() => Math.random()).slice(0, 4).map(friend => friend._id)
+        const randomFriends = friends.slice().sort(() => Math.random()).slice(0, 4).map(friend => friend._id)
         // console.log(randomFriends);
 
         const response = await shuffleOptions(drip?._id, questionIndex - 1, randomFriends)
@@ -217,6 +218,7 @@ const Poll = () => {
                                     <div className={styles.questionInfo}>
                                         {question?.text && (
                                             <>
+                                                {/* Using the spread operator, you're converting the string into an array of Unicode-aware characters (called grapheme clusters), so each emoji or symbol is treated as a full character */}
                                                 <div className={styles.emoji}>
                                                     {[...question.text][0] || '❓'} {/* Fallback emoji */}
                                                 </div>

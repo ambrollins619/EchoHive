@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import styles from '../styles/ChangePassword.module.css'
 import defaultProfileImage from '../assets/jack.png'
 import { BsEye, BsEyeSlash } from 'react-icons/bs'
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
 import { updatePassword } from '../api/user'
 import Spinner from './Spinner'
 
@@ -118,7 +118,7 @@ const ChangePassword = () => {
             <h2 className={styles.editSectionHeader}>
                 Change Password
             </h2>
-            <form className={styles.editPasswordForm} encType='multipart/form-data' onSubmit={handlePasswordChangesSave}>
+            <form className={styles.editPasswordForm} onSubmit={handlePasswordChangesSave}>
                 <div className={styles.textField}>
                     <label htmlFor="currentPassword">Current Password</label>
                     <div className={`${styles.passwordInput} ${errorMessages.currentError ? styles.errorInputStyles : ""}`}>

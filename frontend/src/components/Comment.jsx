@@ -7,7 +7,7 @@ import styles from '../styles/Comment.module.css'
 import moment from 'moment';
 import { deleteComment, editComment, voteComment } from '../api/comment';
 import { useSelector } from 'react-redux'
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
 
 const Comment = ({
     comment,
@@ -55,7 +55,7 @@ const Comment = ({
 
         } catch (error) {
             // Revert on error
-            setLocalVote(comment.userVote);
+            setLocalVote(comment.uservote);
             setUpvotes(comment.upvotes.length);
             setDownvotes(comment.downvotes.length);
             console.error('Vote failed:', error);
@@ -75,7 +75,7 @@ const Comment = ({
 
     useEffect(() => {
         setLocalVote(comment.uservote || null);
-    }, [comment.userVote]);  // Correct property name case
+    }, [comment.uservote]);
 
     useEffect(() => {
         setCommentText(comment?.content)

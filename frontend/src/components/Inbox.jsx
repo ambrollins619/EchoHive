@@ -23,7 +23,7 @@ const Inbox = () => {
     return (
         <>
             <div className={styles.inboxContainer}>
-                {inbox?.reverse().map((item) => (
+                {inbox?.slice().reverse().map((item) => (
                     <div 
                         key={item._id} // Don't forget a unique key
                         className={styles.inbox} 

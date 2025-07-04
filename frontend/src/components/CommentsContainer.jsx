@@ -5,7 +5,7 @@ import profileImage from '../assets/megan.png'
 import Comment from './Comment';
 import { useSelector } from 'react-redux';
 import { createComment, deleteComment } from '../api/comment';
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
 
 const CommentsContainer = ({ post }) => {
     const [newComment, setNewComment] = useState('')
@@ -29,6 +29,7 @@ const CommentsContainer = ({ post }) => {
     const handleCommentDelete = async (commentId,postId) => {
         try {
             const response = await deleteComment(post._id, commentId)
+            setAddedComments(prev => prev.filter(comment => comment._id !== commentId))
             setComments(prev => prev.filter(comment => comment._id !== commentId))
         } catch (error) {
             toast.error(error.message)
@@ -68,7 +69,7 @@ const CommentsContainer = ({ post }) => {
                         }
                         return (
                             <Comment
-                            key={comment._id}
+                                key={comment._id}
                                 comment={comment}
                                 isMenuOpen={menuOpenId === index}
                                 postId={post._id}
@@ -89,7 +90,7 @@ const CommentsContainer = ({ post }) => {
                         }
                         return (
                             <Comment
-                            key={comment._id}
+                                key={comment._id}
                                 comment={comment}
                                 isMenuOpen={menuOpenId === index + addedComments.length}
                                 postId={post._id}

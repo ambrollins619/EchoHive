@@ -3,7 +3,7 @@ import { ModalContext } from '../context/modalContext';
 import styles from '../styles/CreatePostModal.module.css'
 import { createPortal } from 'react-dom'
 import { FaGhost, FaGlobe } from "react-icons/fa";
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
 import { updatePost } from '../api/post'; // You'll need to create this API function
 
 const EditPostModal = ({ post, toggleEditModalOpen, onPostUpdated }) => {
