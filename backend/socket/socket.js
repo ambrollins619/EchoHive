@@ -7,23 +7,22 @@ const app = express();
 
 
 const corsOptions = {
-    origin: 'https://echohive-frontend.onrender.com',
+    origin: 'http://localhost:5173',
     credentials: true,
 }
 
 const server = http.createServer(app);
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // Enable preflight for all routes
 
 
 const io = new Server(server, {
     cors: {
-        origin: 'https://echohive-frontend.onrender.com',
+        origin: 'http://localhost:5173',
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-        credentials: true, // ADD THIS if you want cookies there too
+        credentials: true, // since axios instance has withCredentials: true, 
+        // server must respond with access-control-allow-credentials: true or else request will be blocked
         allowedHeaders: ['Content-Type', 'Authorization'], // Required for credentials
-        optionsSuccessStatus: 200 // Legacy browsers choke on 204
     }
 })
 

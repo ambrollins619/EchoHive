@@ -11,8 +11,7 @@ export const SendVerificationCode = async (email, verificationCode) => {
             html: Verification_Email_Template.replace("{verificationCode}", verificationCode),
         });
     } catch (error) {
-        console.log(error);
-        console.log('Error in sending email');
+        console.error('Error in sending verification email ',error.message);
     }
 }
 
@@ -23,10 +22,10 @@ export const SendWelcomeEmail = async (email, name) => {
             from: '"Keshav Mahansaria 👻" <keshavmahansaria@gmail.com>',
             to: email,
             subject: "You're All Set! 🎉",
-            text: `Hello ${name},\n\nCongratulations! Your email has been successfully verified. You can now log in and start using EchoHive.\n\nIf you have any questions, feel free to reach out to us.\n\nBest,\nEchoHive`,
+            text: `Hello ${name},\n\nCongratulations! Your email has been successfully verified. You can now error in and start using EchoHive.\n\nIf you have any questions, feel free to reach out to us.\n\nBest,\nEchoHive`,
             html: Welcome_Email_Template.replace("{name}", name),
         });
     } catch (error) {
-        console.log('Email error');
+        console.error('Error in welcome email: ',error.message);
     }
 }
