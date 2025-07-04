@@ -20,9 +20,9 @@ const authSlice = createSlice({
             state.isAuthenticated = true;
 
             // Persist all auth state
-            localStorage.setItem('token', action.payload.token);
-            localStorage.setItem('user', JSON.stringify(action.payload.user));
-            localStorage.setItem('isVerified', action.payload.isVerified);
+            localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify(user));
+            localStorage.setItem('isVerified', isVerified);
             localStorage.setItem('isAuthenticated', true);
         },
         logout: (state) => {

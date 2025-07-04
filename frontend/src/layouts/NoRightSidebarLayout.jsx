@@ -1,67 +1,35 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import styles from '../styles/NoRightSidebarLayout.module.css';
-import RightSidebar from '../components/RightSidebar';
-import NotificationSidebar from '../components/NotificationSidebar'; // New component
-import SearchSidebar from '../components/SearchSidebar';
-import CreatePostModal from '../components/CreatePostModal';
 import ShrinkedSidebar from '../components/ShrinkedSidebar';
 import SettingsBar from '../components/SettingsBar';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCredentials } from '../features/auth/authSlice.js'
 
 const NoRightSidebarLayout = () => {
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [showSearchbar, setShowSearchbar] = useState(false);
-  const [postModalOpen, setPostModalOpen] = useState(false);
   const auth = useSelector((state) => state.auth);
   const isLoggedIn = Boolean(auth.token);
   const [checkingAuth, setCheckingAuth] = useState(true);   // handle initial load/render edge case
+  const dispatch=useDispatch()
 
-  const toggleNotifications = () => {
-    setShowNotifications(!showNotifications);
-    setShowSearchbar(false);
-    setPostModalOpen(false);
-    document.body.classList.toggle(styles.sidebarOpen, !showNotifications);
-  };
-
-  const toggleSearchbar = () => {
-    setShowSearchbar(!showSearchbar);
-    setShowNotifications(false);
-    setPostModalOpen(false);
-    document.body.classList.toggle(styles.sidebarOpen, !showSearchbar);
-  };
-
-  const togglePostModalOpen = () => {
-    setPostModalOpen(!postModalOpen)
-    setShowNotifications(false);
-    setShowSearchbar(false);
-    document.body.classList.toggle(styles.sidebarOpen, !postModalOpen);
-  }
-
-  // Close on ESC key
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && showNotifications) {
-        toggleNotifications();
+  // Checking whether user is logged in or not
+    useEffect(() => {
+      const token = localStorage.getItem('token');
+      const user = JSON.parse(localStorage.getItem('user'));
+      const isVerified = localStorage.getItem('isVerified') === 'true';
+  
+      if (token && user) {
+        // Redux hasn't restored but localStorage has valid data
+        dispatch(setCredentials({ token, user, isVerified }));
+        setCheckingAuth(false);
+      } else if (!auth.token && !token) {
+        // no auth anywhere
+        setCheckingAuth(false);
+      } else {
+        // redux already has token
+        setCheckingAuth(false);
       }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [showNotifications]);
-
-  useEffect(() => {
-    // simulate checking token from localStorage or redux restoring
-    const token = localStorage.getItem('token');
-    if (!auth.token && !token) {
-      setCheckingAuth(false); // no token found
-    } else if (token && !auth.token) {
-      // restore token if redux hasn't yet
-      // this depends on your App-level setup
-    } else {
-      setCheckingAuth(false); // token exists
-    }
-  }, [auth.token]);
+    }, [dispatch]);
 
   if (checkingAuth) return <p> Loading </p>; // or a loading spinner
 
@@ -71,43 +39,13 @@ const NoRightSidebarLayout = () => {
 
   return (
     <div className={styles.appLayout}>
-      <ShrinkedSidebar
-        toggleNotifications={toggleNotifications}
-        toggleSearchbar={toggleSearchbar}
-        togglePostModalOpen={togglePostModalOpen}
-        showSearchbar={showSearchbar}
-        setPostModalOpen={setPostModalOpen}
-      />
+      <ShrinkedSidebar/>
 
       <SettingsBar />
 
-      <main className={`${styles.mainContent} ${showNotifications || showSearchbar ? styles.blurred : ''}`}>
+      <main className={styles.mainContent}>
         <Outlet />
       </main>
-
-      {showNotifications && (
-        <>
-          <div className={`${styles.notificationOverlay} ${showNotifications || showSearchbar ? styles.visible : ''}`} onClick={toggleNotifications} />
-          <NotificationSidebar onClose={toggleNotifications} />
-        </>
-      )}
-
-      {showSearchbar && (
-        <>
-          <div className={`${styles.notificationOverlay} ${showNotifications || showSearchbar ? styles.visible : ''}`} onClick={toggleSearchbar} />
-          <SearchSidebar onClose={toggleSearchbar} />
-        </>
-      )}
-
-      {postModalOpen && (
-        <>
-          <div className={`${styles.notificationOverlay} ${postModalOpen ? styles.visible : ''}`} onClick={togglePostModalOpen} />
-          <CreatePostModal
-            onClose={togglePostModalOpen}
-            togglePostModalOpen={togglePostModalOpen}
-          />
-        </>
-      )}
     </div>
   );
 };

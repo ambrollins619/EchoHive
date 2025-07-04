@@ -65,48 +65,51 @@ const MainLayout = () => {
   const handleEditPost = (post) => {
     setPostToEdit(post);
     setEditModalOpen(true);
+    // sidebarOpen actually sets overflow to hidden that is why adding this class
+    // though not the best practice
     document.body.classList.add(styles.sidebarOpen);
   };
 
+  // Fetching friends and storing in redux state on initial render
   useEffect(() => {
-    try {
-      const fetchFriends = async () => {
+    const fetchFriends = async () => {
+      try {
         const response = await getFriends()
         dispatch(setFriends(response.friends))
+      } catch (error) {
+        console.log(error.message)
       }
-      fetchFriends()
-
-    } catch (error) {
-      console.log(error.message)
     }
+    fetchFriends()
   }, [])
 
+  // Fetching recommended friends and storing in redux state on initial render
   useEffect(() => {
-    try {
-      const fetchRecommendedFriends = async () => {
+    const fetchRecommendedFriends = async () => {
+      try {
         const response = await getRecommendedUsers()
         setRecommended(response)
+      } catch (error) {
+        console.log(error.message)
       }
-      fetchRecommendedFriends()
-    } catch (error) {
-      console.log(error.message)
     }
+    fetchRecommendedFriends()
   }, [])
 
+  // Fetching notifications and storing in redux state on initial render
   useEffect(() => {
-    try {
-      const fetchNotifications = async () => {
+    const fetchNotifications = async () => {
+      try {
         const response = await getNotifications()
         dispatch(setNotifications(response))
+      } catch (error) {
+        console.log(error.message)
       }
-      fetchNotifications()
-
-    } catch (error) {
-      console.log(error.message)
     }
+    fetchNotifications()
   }, [])
 
-  // Close on ESC key
+  // Close notifications bar on ESC key
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' && showNotifications) {
@@ -118,12 +121,13 @@ const MainLayout = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [showNotifications]);
 
+  // Checking whether user is logged in or not
   useEffect(() => {
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user'));
     const isVerified = localStorage.getItem('isVerified') === 'true';
 
-    if ( token && user ) {
+    if (token && user) {
       // Redux hasn't restored but localStorage has valid data
       dispatch(setCredentials({ token, user, isVerified }));
       setCheckingAuth(false);
@@ -134,11 +138,11 @@ const MainLayout = () => {
       // redux already has token
       setCheckingAuth(false);
     }
-  }, [ dispatch ]);
+  }, [dispatch]);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
-    if(user._id){
+    if (user._id) {
       initSocket(dispatch, user._id)
     }
   }, [])
