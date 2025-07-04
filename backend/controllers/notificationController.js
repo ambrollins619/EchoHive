@@ -7,7 +7,7 @@ export const readNotification = async (req, res) => {
         const NotifiedUser = req.user;
 
         if (!NotifiedUser.notifications.some(userNotificationId => userNotificationId.toString() === notificationId)) {
-            return res.status(400).json({
+            return res.status(404).json({
                 success: false,
                 message: "Couldn't find the notification you were looking for"
             })

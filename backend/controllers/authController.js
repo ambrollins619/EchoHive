@@ -2,7 +2,7 @@ import { User } from "../models/User.model.js";
 import { SendVerificationCode, SendWelcomeEmail } from "../utils/sendMail.js";
 import generateToken from '../utils/generateToken.js'
 import jwt from "jsonwebtoken"
-import { College } from "../models/College.model.js"; // Your MongoDB model for colleges
+import { College } from "../models/College.model.js";
 import { Notification } from "../models/Notification.model.js";
 import { io, userSocketMap } from "../socket/socket.js";
 import WORLD_UNIVERSITIES from '../world_universities_and_domains.json' with { type: 'json' };
@@ -22,7 +22,7 @@ export const register = async (req, res) => {
         const userExists = await User.findOne({ email });
 
         if (userExists && userExists.isVerified) {
-            return res.status(400).json({ success: false, message: "User already exists" });
+            return res.status(409).json({ success: false, message: "User already exists" });
         }
 
         // If the user exists but is NOT verified, update the verification code
@@ -58,7 +58,7 @@ export const register = async (req, res) => {
 
 
         if (!collegeJson) {
-            return res.status(401).json({ success: false, message: "Your college domain was not found" });
+            return res.status(404).json({ success: false, message: "Your college domain was not found" });
         }
 
         let college = await College.findOne({ name: collegeJson.name });
@@ -134,7 +134,7 @@ export const verifyCode = async (req, res) => {
         const user = await User.findById(userId);
 
         if (!user) {
-            return res.status(401).json({ success: false, message: "User not found " })
+            return res.status(401).json({ success: false, message: "Unauthorized action" });
         }
 
         const isCodeExpired = new Date(Date.now()) > new Date(user.verificationCodeExpiry);
@@ -173,7 +173,7 @@ export const verifyCode = async (req, res) => {
                 console.log("Error in sending notifications to all users");
                 console.error("Error message: ", error.message);
             }
-            return res.status(200).json({ success: true, message: "User verified successfully", user });
+            return res.status(201).json({ success: true, message: "User verified successfully", user });
         } else {
             return res.status(401).json({ success: false, message: "Invalid verification code" });
         }
@@ -195,7 +195,7 @@ export const resendVerificationCode = async (req, res) => {
         const user = await User.findById(userId);
 
         if (!user) {
-            return res.status(401).json({ success: false, message: "User not found" });
+            return res.status(401).json({ success: false, message: "Unauthorized action" });
         }
 
         if (user.isVerified) {
@@ -230,18 +230,18 @@ export const login = async (req, res) => {
             .findOne({ email })
             .select('-verificationCode -verificationCodeExpiry');
         if (!user) {
-            return res.status(400).json({ success: false, message: "No such user registered" });
+            return res.status(401).json({ success: false, message: "Invalid email or password" });
         }
 
         if (!user.isVerified) {
-            return res.status(400).json({ success: false, message: "User not verified" });
+            return res.status(401).json({ success: false, message: "Invalid email or password" });
         }
 
         await user.populate({ path: 'collegeId', model: 'College', select: 'name' })
 
         if (await user.matchPassword(password)) {
             const token = generateToken(res, user._id.toString());
-            return res.status(201).json({
+            return res.status(200).json({
                 success: true,
                 message: "User logged in successfully",
                 user: {

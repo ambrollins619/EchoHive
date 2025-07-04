@@ -9,7 +9,7 @@ import { Notification } from "../models/Notification.model.js";
 
 export const createDrip = async (userId) => {
     try {
-        // i will not create a drip immendiatly after registeration
+        // i will not create a drip immendiatly after registration
         // it will be created first time after the user click on the drip page
         // we will check in frontend if a drip object already exists for the user
         // if it does not exist we will create a new drip object
@@ -90,7 +90,7 @@ export const updateDrip = async (req, res) => {
         const userId = req.user._id;
 
         if (!mongoose.Types.ObjectId.isValid(dripId)) {
-            return res.status(400).json({ success: false, message: "Drip not found" })
+            return res.status(404).json({ success: false, message: "Drip not found" })
         }
 
         //Convert questionIndex to number and validate
@@ -103,7 +103,7 @@ export const updateDrip = async (req, res) => {
         }
 
         if (!mongoose.Types.ObjectId.isValid(selectedUserId)) {
-            return res.status(400).json({ success: false, message: "Selected User not found" })
+            return res.status(404).json({ success: false, message: "Selected User not found" })
         }
 
         const drip = await Drip.findById(dripId).populate({
@@ -116,11 +116,11 @@ export const updateDrip = async (req, res) => {
         }
 
         if (!drip) {
-            return res.status(400).json({ success: false, message: "Drip not found" })
+            return res.status(404).json({ success: false, message: "Drip not found" })
         }
 
         if (questionIndex >= drip.questions.length) {
-            return res.status(400).json({ success: false, message: "Question not found" })
+            return res.status(404).json({ success: false, message: "Question not found" })
         }
 
         if (Date.now() < drip.activityDate) {
@@ -162,7 +162,6 @@ export const updateDrip = async (req, res) => {
             console.log("Error in sending notifications to selected user");
             console.error("Error message: ", error.message);
         }
-        // after this I need to send notification to the user which was selected
 
         question.questionResponse = questionResponse._id;
         await question.save();
@@ -170,7 +169,7 @@ export const updateDrip = async (req, res) => {
         
         if (drip.questions.findIndex(dripQuestion => dripQuestion._id.equals(question._id)) === drip.questions.length - 1) {
 
-            // drip.isCompleted = true
+
             drip.activityDate = Date.now() + 1000 * 60 * 60
 
             const userId = req.user._id;
@@ -230,7 +229,7 @@ export const updateDrip = async (req, res) => {
             ]
         })
 
-        return res.status(201).json(drip);
+        return res.status(200).json(drip);
 
     } catch (error) {
         console.log(error.message)
@@ -266,7 +265,6 @@ export const skipLast = async (req, res) => {
 
         await drip.populate("questions")
 
-        // drip.isCompleted = true
         drip.activityDate = Date.now() + 1000 * 60 * 60
 
         const friendIds = req.user.friends;
@@ -427,7 +425,7 @@ export const getProblem = async (req, res) => {
         if (index === -1) {
             return res.status(200).json({
                 success: true,
-                message: "Man Poll is active",
+                message: "Poll is active",
             });
         }
         
@@ -542,7 +540,6 @@ export const shuffleOptions = async (req, res) => {
 
         // Update and save
         question.options = options.map(optId => ({ userId: optId })); // Match your schema structure
-        question.markModified('options'); // Needed for mixed types/array of objects
         await question.save();
 
         // Return populated question if needed
@@ -592,7 +589,7 @@ export const getActivity = async (req, res) => {
         return res.status(200).json(activityQuestionResponses);
 
     } catch (error) {
-        console.error('Getting Activity Error:', error);
+        console.error('Error during fetching activity:', error);
         console.log(error.message)
         return res.status(500).json({ error: error.message });
     }
@@ -633,7 +630,7 @@ export const getInbox = async (req, res) => {
         return res.status(200).json(activityInboxResponses);
 
     } catch (error) {
-        console.error('Getting Activity Error:', error);
+        console.error('Error during fetching inbox:', error);
         console.log(error.message)
         return res.status(500).json({ error: error.message });
     }
@@ -670,7 +667,7 @@ export const getQuestionResponse = async (req, res) => {
         return res.status(200).json(activityInboxResponses);
 
     } catch (error) {
-        console.error('Getting Activity Error:', error);
+        console.error('Error during fetching question response:', error);
         console.log(error.message)
         return res.status(500).json({ error: error.message });
     }

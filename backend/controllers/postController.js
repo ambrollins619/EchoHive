@@ -56,7 +56,7 @@ export const createPost = async (req, res) => {
 export const getPost = async (req, res) => {
 
     try {
-        const { postId } = req.params; // Use req.params instead of req.body
+        const { postId } = req.params;
 
         if (!mongoose.Types.ObjectId.isValid(postId)) {
             return res.status(400).json({ error: "Invalid postId format" });
@@ -101,7 +101,7 @@ export const deletePost = async (req, res) => {
         const { postId } = req.params;
 
         if (!mongoose.Types.ObjectId.isValid(postId)) {
-            return res.status(400).json({ error: "Invalid postId format" });
+            return res.status(404).json({ error: "Post not found" });
         }
 
         const post = await Post.findById(postId);
@@ -112,7 +112,7 @@ export const deletePost = async (req, res) => {
         }
 
         if (!post.userId.equals(req.user._id)) {
-            return res.status(401).json({ error: "Unauthorized action" })
+            return res.status(403).json({ error: "Unauthorized action" })
         }
 
         await User.findByIdAndUpdate(req.user._id, {
@@ -147,7 +147,7 @@ export const editPost = async (req, res) => {
 
 
         if (!mongoose.Types.ObjectId.isValid(postId)) {
-            return res.status(400).json({ error: "Invalid postId format" });
+            return res.status(404).json({ error: "Post not found" });
         }
 
         //find existing post
@@ -358,9 +358,9 @@ export const getPosts = async (req, res) => {
             return res.status(400).json({ message: "Please enter a valid query paramter" });
         }
 
-        // Ensure collegeId is converted to an ObjectId1
+        // Ensure collegeId is converted to an ObjectId
         if (!req.user.collegeId.equals(new mongoose.Types.ObjectId(collegeId))) {
-            return res.status(403).json({ message: "Access Denied" }); // Changed 401 to 403 (Forbidden)
+            return res.status(403).json({ message: "Access Denied" });
         }
 
         const filters = { collegeId: new mongoose.Types.ObjectId(collegeId) };
@@ -389,9 +389,6 @@ export const getPosts = async (req, res) => {
     }
 };
 
-
-// TODO --> after learning mongodb aggregation pipelines do implement it here
-// Will be testing this route while doing implementation of frontend
 export const getTrendingPosts = async (req, res) => {
     try {
         let { isGlobal, collegeId, page, postType } = req.query;
@@ -407,12 +404,11 @@ export const getTrendingPosts = async (req, res) => {
 
         // Ensure collegeId is converted to an ObjectId1
         if (collegeId && !req.user.collegeId.equals(new mongoose.Types.ObjectId(collegeId))) {
-            return res.status(403).json({ message: "Access Denied" }); // Changed 401 to 403 (Forbidden)
+            return res.status(403).json({ message: "Access Denied" });
         } else {
             if (collegeId)
                 fetchQuery.collegeId = collegeId;
         }
-
 
         if (isGlobal) {
             fetchQuery.isGlobal = true;
@@ -444,8 +440,7 @@ export const getTrendingPosts = async (req, res) => {
             .lean(); // Get recent posts
 
 
-        // Get all user votes in ONE query (not per post)
-        // Get all user votes in ONE query (not per post)
+        // Get all user votes in ONE query (not per post)3
         const userVotes = await User.aggregate([
             {
                 $match: {

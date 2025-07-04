@@ -13,15 +13,15 @@ export const createComment = async (req, res) => {
         }
 
         if (!mongoose.Types.ObjectId.isValid(postId)) {
-            return res.status(400).json({ message: "Post not found" })
+            return res.status(404).json({ message: "Post not found" })
         }
 
         const post = await Post.findById(postId);
         if (!post) {
-            return res.status(400).json({ message: "Post not found" })
+            return res.status(404).json({ message: "Post not found" })
         }
 
-        const user = await User.findByIdAndUpdate(userId);
+        const user = await User.findById(userId);
         const comment = await Comment.create({
             postId: new mongoose.Types.ObjectId(postId),
             userId,
@@ -36,7 +36,7 @@ export const createComment = async (req, res) => {
             $push: { comments: comment._id }
         })
 
-        return res.status(200).json(comment);
+        return res.status(201).json(comment);
     } catch (error) {
         console.log(error.message)
         return res.status(500).json({ error: error.message });
@@ -49,16 +49,16 @@ export const deleteComment = async (req, res) => {
         const userId = req.user._id;
 
         if (!mongoose.Types.ObjectId.isValid(commentId)) {
-            return res.status(400).json({ message: "Comment not found" })
+            return res.status(404).json({ message: "Comment not found" })
         }
 
         const comment = await Comment.findById(commentId);
         if (!comment) {
-            return res.status(400).json({ message: "Comment not found" })
+            return res.status(404).json({ message: "Comment not found" })
         }
 
         if (!comment.userId.equals(userId)) {
-            return res.status(400).json({ message: "Unauthorized action" })
+            return res.status(403).json({ message: "Unauthorized action" })
         }
 
         await User.findByIdAndUpdate(userId, {
@@ -87,16 +87,20 @@ export const editComment = async (req, res) => {
         const userId = req.user._id;
 
         if (!mongoose.Types.ObjectId.isValid(commentId)) {
-            return res.status(400).json({ message: "Comment not found" })
+            return res.status(404).json({ message: "Comment not found" })
         }
 
         const comment = await Comment.findById(commentId);
         if (!comment) {
-            return res.status(400).json({ message: "Comment not found" })
+            return res.status(404).json({ message: "Comment not found" })
         }
 
         if (!comment.userId.equals(userId)) {
-            return res.status(400).json({ message: "Unauthorized action" })
+            return res.status(403).json({ message: "Unauthorized action" })
+        }
+
+        if (!content?.trim()) {
+            return res.status(400).json({ message: "Comment content cannot be empty" });
         }
 
         comment.content = content || comment.content;
@@ -116,21 +120,21 @@ export const voteComment = async (req, res) => {
         const { isUpvote } = req.body;
         const userId = req.user._id;
 
-        if(!mongoose.Types.ObjectId.isValid(commentId)){
-            return res.status(400).json({ message: "Comment not found" })
+        if (!mongoose.Types.ObjectId.isValid(commentId)) {
+            return res.status(404).json({ message: "Comment not found" })
         }
 
         const comment = await Comment.findById(commentId);
         if (!comment) {
-            return res.status(400).json({ message: "Comment not found" })
+            return res.status(404).json({ message: "Comment not found" })
         }
 
         const updateQuery = {
             $pull: {}
         }
-        
-        if(isUpvote) {
-            if(comment.upvotes.includes(userId)) {
+
+        if (isUpvote) {
+            if (comment.upvotes.includes(userId)) {
                 updateQuery.$pull.upvotes = userId
             } else {
                 updateQuery.$push = {}
@@ -138,7 +142,7 @@ export const voteComment = async (req, res) => {
                 updateQuery.$push.upvotes = userId
             }
         } else {
-            if(comment.downvotes.includes(userId)) {
+            if (comment.downvotes.includes(userId)) {
                 updateQuery.$pull.downvotes = userId
             } else {
                 updateQuery.$push = {}

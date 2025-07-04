@@ -52,7 +52,7 @@ export const getUserProfile = async (req, res) => {
                 ]);
 
             if (user) {
-                return res.status(201).json({ success: true, user });
+                return res.status(200).json({ success: true, user });
             }
         }
 
@@ -109,7 +109,7 @@ export const getUserProfile = async (req, res) => {
         if (!userByName) {
             return res.status(404).json({ success: false, message: "User not found" })
         } else {
-            return res.status(201).json({ success: true, userByName });
+            return res.status(200).json({ success: true, userByName });
         }
 
     } catch (error) {
@@ -219,11 +219,15 @@ export const changePassword = async (req, res) => {
     try {
         const { currentPassword, newPassword } = req.body;
 
+        if (!currentPassword || !newPassword) {
+            return res.status(400).json({ success: false, message: "Both current and new passwords are required" });
+        }
+
         const user = await User.findById(req.user._id);
 
         const isMatch = await user.matchPassword(currentPassword);
         if (!isMatch) {
-            return res.status(403).json({ success: false, message: "Current password is incorrect" });
+            return res.status(400).json({ success: false, message: "Current password is incorrect" });
         }
 
         user.password = newPassword;
@@ -288,12 +292,12 @@ export const searchUsers = async (req, res) => {
 export const recommendedUsers = async (req, res) => {
     try {
         const { limit = 10 } = req.query;
-        
+
         const recommendedUsers = await User.aggregate([
             { $match: { _id: { $nin: [...req.user.friends, req.user._id] } } },
             { $sample: { size: limit } },
-            { $project: { _id: 1, name: 1, avatar: 1 } }, 
-        ]);        
+            { $project: { _id: 1, name: 1, avatar: 1 } },
+        ]);
 
         return res.status(200).json(recommendedUsers)
 
