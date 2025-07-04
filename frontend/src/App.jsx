@@ -14,29 +14,47 @@ import NoRightSidebarLayout from './layouts/NoRightSidebarLayout'
 import NotificationsSettings from './components/NotificationsSettings'
 import ChangePassword from './components/ChangePassword'
 import Login from './pages/Login'
-import { ToastContainer } from 'react-toastify'
 import { ProtectedRoute, GuestRoute } from './components/AuthRoute';
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from './features/auth/authSlice'
 import { isTokenExpired } from './utils/token'
+import { Toaster } from "sonner"
+import './styles/SonnerToaster.css'
 
 const App = () => {
 
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.auth);
 
-  // Check token on initial render
+  // Check whether stored token is expired on initial render
   useEffect(() => {
     if (token && isTokenExpired(token)) {
       dispatch(logout());
     }
-  }, [dispatch, token]); // Empty dependency array ensures this runs only once on mount
+  }, [dispatch, token]);
 
 
 
   return (
     <div>
-      <ToastContainer />
+      <Toaster
+        theme="dark"
+        position="top-right"
+        expand={true}
+        richColors={true}
+        closeButton={true}
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: 'linear-gradient(135deg, rgb(30 41 59) 0%, rgb(15 23 42) 100%)',
+            color: 'rgb(248 250 252)',
+            border: '1px solid rgba(148 163 184, 0.2)',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.4)',
+            backdropFilter: 'blur(12px)',
+          },
+          className: 'dark-toast',
+        }}
+      />
       <Routes>
         {/* Public Routes */}
         <Route element={<GuestRoute />}>
@@ -47,7 +65,7 @@ const App = () => {
         {/* Different from other two, when user is auth. but not verified */}
         <Route path='/verify' element={<VerifyCode />} />
 
-        {/* Private Routes */}
+        {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
           <Route path='/' element={
             <ModalProvider>

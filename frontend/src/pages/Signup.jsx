@@ -8,10 +8,9 @@ import { Navigate, useNavigate } from 'react-router-dom'
 import { signUpUser } from '../api/auth'
 import { useDispatch } from 'react-redux'
 import { setCredentials } from '../features/auth/authSlice.js'
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
 
 const Signup = () => {
-
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")

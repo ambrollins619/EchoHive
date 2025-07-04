@@ -4,7 +4,7 @@ import ProfileUpperSection from '../components/ProfileUpperSection'
 import ProfileLowerSection from '../components/ProfileLowerSection'
 import styles from '../styles/ProfileSection.module.css'
 import { getUserByName } from '../api/user'
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { deletePost } from '../api/post'
 

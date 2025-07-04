@@ -3,7 +3,7 @@
     position: fixed;
     top: 0;
     bottom: 0;
-    left: 270px;
+    left: 268px;
     /* aligns next to sidebar */
     width: 350px;
     color: #fff;
@@ -16,6 +16,7 @@
 .settingsTop {
     display: flex;
     align-items: center;
+    user-select: none;
     padding: 16px 20px;
     font-size: 18px;
     font-weight: 600;

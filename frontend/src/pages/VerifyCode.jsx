@@ -3,7 +3,7 @@ import styles from '../styles/VerifyCode.module.css'
 import OtpInput from 'react-otp-input';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
 import { resendOtp, verifyUser } from '../api/auth';
 import { setIsVerified } from '../features/auth/authSlice.js'
 import Spinner from '../components/Spinner.jsx';
@@ -49,10 +49,10 @@ const VerifyCode = () => {
             <Navigate to='/signup' />
         )
     }
-
+    
     if (isVerified === true) {
         return (
-            <Navigate to='/signup' />
+            <Navigate to='/explore/global' />
         )
     }
 

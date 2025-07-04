@@ -62,7 +62,7 @@ const EditProfilePage = () => {
       <h2 className={styles.editSectionHeader}>
         Edit Profile
       </h2>
-      <form className={styles.editProfileForm} encType='multipart/form-data' onSubmit={handleEditChangesSave}>
+      <form className={styles.editProfileForm} onSubmit={handleEditChangesSave}>
         <div className={styles.avatarField}>
           <input
             type="file"

@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setCredentials } from '../features/auth/authSlice'
 import { loginUser } from '../api/auth'
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
 
 const Login = () => {
 
